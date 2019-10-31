@@ -6,9 +6,9 @@ Original Repo: https://github.com/youmowang/zjnuservice
 
 # Goal
 The goal of this Repo is:
-* 1.Clone the Original Repo.
-* 2.Commit the improvments made on the original project.
-* 3.Submit the Repo's url to the course teacher.
+* Clone the Original Repo.
+* Commit the improvments made on the original project.
+* Submit the Repo's url to the course teacher.
 
 # Team info
 This project is maintained by IBRAHIM M.I ISMAIL & Yussuf Mohamed Mahdi of class SE 2017.
