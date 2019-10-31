@@ -4,11 +4,11 @@ TreeLib is an Academic articles library webapp, in which authors, and visitors, 
 This project is developed by Yun Dabang, Ni Zhongjie, as part of the OOAD course, Fall 2018.
 Original Repo: https://github.com/youmowang/zjnuservice
 
-#Goal
+# Goal
 The goal of this Repo is:
-1.Clone the Original Repo.
-2.Commit the improvments made on the original project.
-3.Submit the Repo's url to the course teacher.
+* 1.Clone the Original Repo.
+* 2.Commit the improvments made on the original project.
+* 3.Submit the Repo's url to the course teacher.
 
-#Team info
+# Team info
 This project is maintained by IBRAHIM M.I ISMAIL & Yussuf Mohamed Mahdi of class SE 2017.
