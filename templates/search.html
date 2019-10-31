@@ -1,0 +1,57 @@
+{% extends "template.html" %}
+
+{% block content %}
+    {% if message %}
+        {{ message }}
+    {% endif %}
+
+    {% if articles %}
+        <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+          <th>subject</th>
+        <th>title</th>
+        <th>author</th>
+        <th>time</th>
+          <th>population</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for article in articles %}
+            <td><a href="/subject/{{ article.subject_id }}">{{ article.subject.name }}</a></td>
+            <td><a href="/article/{{ article.id }}">{{ article.title }}</a></td>
+            <td>{{ Tool.email_display_filter(article.author.mail) }}</td>
+            <td>{{ article.time.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td>{{ article.metric }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+
+    {% endif %}
+
+
+    {% if comments %}
+        <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+          <th>article_title</th>
+        <th>comment</th>
+        <th>time</th>
+        <th>author</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for comment in comments %}
+        <tr>
+            <td><a href="/article/{{ comment.article_id }}">{{ comment.article.title }}</a></td>
+            <td>{{ Tool.sensitive_words_filter(comment.body) }}</td>
+            <td>{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td><a href="/author/{{ comment.author_id }}">{{ Tool.email_display_filter(comment.author.mail) }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+    {% endif %}
+
+{% endblock %}

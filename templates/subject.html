@@ -1,0 +1,90 @@
+{% extends "template.html" %}
+
+
+
+{% block head %}
+
+    <script>
+        function postArticle() {
+            document.myform.action="/edit"
+        }
+
+        function createSubject() {
+            document.myform.action="/edit_subcategory"
+        }
+
+        function verify() {
+            htmlobj=$.ajax({url:"/check/" + document.getElementById('email').value ,async:false});
+            //alert(JSON.stringify(htmlobj.responseText))
+            let flag = String(htmlobj.responseText)
+            if(flag==='true\n') {
+                alert('Your email has been banned!')
+                return false
+            }else {
+                return true
+            }
+
+        }
+    </script>
+
+{% endblock %}
+
+{% block content %}
+    <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>title</th>
+        <th>author</th>
+        <th>time</th>
+          <th>population</th>
+
+      </tr>
+    </thead>
+    <tbody>
+        <!--Edit-->
+        <br><div class="card">
+    <div class="card-body">
+      <p class="card-text">You are in {{ url }}</p>
+        <form name="myform" method="get" onsubmit="return verify();">
+            <input type="text" name="subject_id" style="display: none" value={{ subject_id }}>
+            <input type="email" name="email" id="email" placeholder="Enter Email to post or create" required="required"/><br><br>
+        <button type="submit" class="btn btn-primary" onclick="postArticle()">post article</button>
+        <button type="submit" class="btn btn-primary" onclick="createSubject()">add subcategory</button>
+        <input type="checkbox" name="add_father" value="father" /> add main subject
+        </form>
+    </div>
+  </div><br>
+        <!--Edit end-->
+    {% if hot_article %}
+            {% for hot_article in hot_article %}
+
+           <!--hot article-->
+        <tr>
+        <td><a href="/article/{{ hot_article.id }}">{{ hot_article.title }}</a></td>
+        <td>{{ Tool.email_display_filter(hot_article.author.mail) }}</td>
+        <td>{{ hot_article.time.strftime("%Y-%m-%d %H:%M") }}</td>
+        <td>{{ hot_article.metric }}&emsp;<span class="badge badge-danger">Hot</span></td>
+        </tr>
+            {% endfor %}
+
+    {% endif %}
+
+        <!--./hot article end-->
+    {% for article in articles[::-1] %}
+        <tr>
+            <td><a href="/article/{{ article.id }}">{{ article.title }}</a></td>
+        <td>{{ Tool.email_display_filter(article.author.mail) }}</td>
+        <td>{{ article.time.strftime("%Y-%m-%d %H:%M") }}</td>
+        <td>{{ article.metric }}</td>
+      </tr>
+    {% endfor %}
+
+
+    </tbody>
+  </table>
+
+
+
+
+
+{%  endblock %}

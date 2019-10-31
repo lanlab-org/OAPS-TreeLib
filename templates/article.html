@@ -1,0 +1,148 @@
+{% extends "template.html" %}
+
+{% block head %}
+
+
+<script>
+    $(document).ready(function(){
+        $("p").css('display', 'inline')
+        $("p.pp").css('cursor', 'pointer')
+        $("p.bp").addClass('font-weight-bold')
+    });
+
+    <!--ajax-->
+    function like() {
+         var url = "/article_upvote/" + {{ article.id }}
+         axios.get(url).then(function(response) {
+            let jsonObject = response.data;
+            document.getElementById('like').innerHTML=jsonObject.upvote
+            if(jsonObject.ht) {
+                alert(jsonObject.ht)
+            }
+        })
+    }
+
+    function dislike() {
+         var url = "/article_downvote/" + {{ article.id }}
+         axios.get(url).then(function(response) {
+            let jsonObject = response.data;
+            document.getElementById('dislike').innerHTML=jsonObject.downvote
+              if(jsonObject.ht) {
+                alert(jsonObject.ht)
+            }
+        })
+    }
+    
+    function clike(comment_id) {
+        var url = "/comment_upvote/" + comment_id
+            axios.get(url).then(function(response) {
+            let jsonObject = response.data;
+            document.getElementById('cl'+comment_id).innerHTML=jsonObject.upvote
+            if(jsonObject.ht) {
+                alert(jsonObject.ht)
+            }
+        })
+    }
+
+
+    function cdislike(comment_id) {
+            var url = "/comment_downvote/" + comment_id
+            axios.get(url).then(function(response) {
+            let jsonObject = response.data;
+            document.getElementById('cd'+comment_id).innerHTML=jsonObject.downvote
+            if(jsonObject.ht) {
+                alert(jsonObject.ht)
+            }
+        })
+    }
+    
+    
+    
+    
+    <!--before comment-->
+    function before_comment() {
+         htmlobj=$.ajax({url:"/check/" + document.getElementById('email').value ,async:false});
+            let flag = String(htmlobj.responseText)
+            if(flag==='true\n') {
+                alert('Your email has been banned!')
+                return false
+            }else {
+                return true
+            }
+    }
+
+</script>
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<br>
+
+<div class="card">
+    <div class="card-body">
+
+    <h2 class="card-title">{{ article.title }}</h2><!--title-->
+
+    <p class="card-text bp" >-abstract<br></p><p>&nbsp;{{ Tool.sensitive_words_filter(article.abstract) }}</p><br><br><!--abstract-->
+
+    <p class="card-text bp">-hightlights<br></p><p>&nbsp;{{ article.highlight }}</p><br><br><!--highlights-->
+
+    <p class="card-text bp">-population metric<br></p><p>&nbsp;{{ article.metric }}</p><br><br><!-- population metric-->
+
+    <p class="card-text bp">-publication date<br></p><p>&nbsp;{{ article.time.strftime("%Y-%m-%d %H:%M") }}</p><br><br><!--publication date-->
+
+    <p class="card-text bp">-author<br></p>&nbsp;<a href="{{ url_for('author', author_id=article.author_id) }}">{{ Tool.email_display_filter(article.author.mail) }}</a><br><br><!--author-->
+
+    <br><br>
+
+    <div>
+        <p class="text-primary pp" onclick="like()">like</p>  <p id="like">{{ article.upvote }}</p>&nbsp;
+
+        <p class="text-primary pp" onclick="dislike()">dislike</p> <p id="dislike">{{ article.downvote }}</p>&nbsp;
+
+        <a href="{{ url_for('download_file', filename=article.fpath) }}"><button class="btn btn-primary" style="float:right" >download pdf</button></a><!--pdf download link-->
+
+    </div>
+
+
+    </div>
+</div>
+
+
+<br>
+<!--comment edit-->
+<div class="card">
+<div class="card-body">
+    <form method="post" action="{{ url_for('post_comment', articleID=article.id) }}" onsubmit="" >
+
+        <div class="form-group">
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required="required">
+        </div>
+
+        <div class="form-group">
+          <textarea class="form-control" rows="3" name="body" placeholder="write something here..." required="required"></textarea>
+        </div>
+
+        <button class="btn btn-primary" type="submit" style="float:right">comment</button>
+    </form>
+</div>
+</div><br>
+
+{% for comment in comments[::-1] %}
+    <div class="card">
+        <div class="card-body">
+            <p><a href="/author/{{ comment.author.id }}">{{ Tool.email_display_filter(comment.author.mail) }}</a></p><br>
+            <p>{{ Tool.sensitive_words_filter(comment.body) }}</p><br>
+            <p class="text-primary pp"  onclick="clike({{ comment.id }})">like</p> <p id='cl{{ comment.id }}'>{{ comment.upvote }}</p>
+            <p class="text-primary pp" onclick="cdislike({{ comment.id }})">dislike</p> <p id='cd{{ comment.id }}'>{{ comment.downvote }}</p>
+            <p  style="float:right" >{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</p>
+        </div>
+    </div>
+{% endfor %}
+
+
+{%  endblock %}

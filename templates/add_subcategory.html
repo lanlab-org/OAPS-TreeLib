@@ -1,0 +1,14 @@
+{% extends "template.html" %}
+
+{% block content %}
+<form method="post" action="/edit_subcategory" >
+    <div class="form-group">
+        <br>
+      <input type="text" class="form-control" id="subject" name="subject_name"  required="required" placeholder="Enter subject's name">
+    </div>
+        <input type="text" name="subject_id" style="display:none;" value={{ subject_id }}>
+    <button type="submit" class=" btn btn-primary">add sub category</button>
+</form>
+        {{ info }}
+
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "template.html" %}
+
+{% block content %}
+    <br>
+     <!-- Nav pills -->
+<ul class="nav nav-pills" role="tablist">
+<li class="nav-item">
+  <a class="nav-link active" data-toggle="pill" href="#home">Home</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" data-toggle="pill" href="#menu1">Articles</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" data-toggle="pill" href="#menu2">Comments</a>
+</li>
+</ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="home" class="container tab-pane active"><br>
+        <!--home-->
+        <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Salman Khan</h4>
+      <p class="card-text">Hi, everyone, welcome to my personal page</p>
+      <a href="#" class="card-link">Card link</a>
+      <a href="#" class="card-link">Another link</a>
+    </div>
+  </div>
+        <!--home end-->
+    </div>
+    <div id="menu1" class="container tab-pane fade"><br>
+        <!--articles-->
+        <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>title</th>
+        <th>time</th>
+                  <th>likes</th>
+          <th>dislikes</th>
+                    <th>visit</th>
+
+        <th>population</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for article in articles %}
+        <tr>
+            <td><a href="/article/{{ article.id }}">{{ article.title }}</a></td>
+            <td>{{ article.time.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td>{{ article.upvote }}</td>
+            <td>{{ article.downvote }}</td>
+            <td>{{ article.visit }}</td>
+            <td>{{ article.metric }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+  </table>
+    </tbody>
+
+  </table>
+    <!--./articles end-->
+    </div>
+    <div id="menu2" class="container tab-pane fade"><br>
+        <!--comments-->
+            <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>title</th>
+          <th>content</th>
+        <th>time</th>
+        <th>likes</th>
+          <th>dislikes</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for comment in comments %}
+      <tr>
+          <td><a href="/article/{{ comment.article.id }}">{{ comment.article.title }}</a></td>
+          <td>{{ Tool.sensitive_words_filter(comment.body) }}</td>
+        <td>{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</td>
+        <td>{{ comment.upvote }}</td>
+              <td>{{ comment.downvote }}</td>
+
+      </tr>
+    {% endfor %}
+    </tbody>
+
+  </table>
+        <!--./comments end-->
+
+    </div>
+  </div>
+{% endblock %}
