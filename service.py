@@ -170,7 +170,8 @@ class db_tool:
 # Tool class include some usual methods
 # ==============================================================================================
 class Tool:
-
+    commentFlag = 0
+    articleFlag = 0
     @staticmethod
     def find(subject):
         if(subject.pid=='None'):
@@ -284,17 +285,15 @@ def article_upvote(articleID):
 
 
     # didn't vote this article before
-    if articlevote is None:
+    if articlevote is None and Tool.articleFlag != 1:
         articlevote = ArticleVote(visitor_id=visitor.id, article_id=articleID)
         article.upvote += 1
         article.metric = Tool.calculate_metric(article)
-
-        # Tool.calculate_metric(article)
-
         db.session.add(articlevote)
         db.session.add(article)
-    else:
-        return jsonify({'ht': 'you has been voted, please do not submit repeatedly', 'upvote': article.upvote})
+    elif articlevote is not None and article.upvote != 0:
+        article.upvote -= 1
+        db.session.delete(articlevote)
     return jsonify({'upvote': article.upvote})
 
 
@@ -315,8 +314,11 @@ def article_downvote(articleID):
 
         db.session.add(articlevote)
         db.session.add(article)
-    else:
-        return jsonify({'ht': 'you has been voted, please do not submit repeatedly', 'downvote': article.downvote})
+        Tool.articleFlag = 1
+    elif articlevote is not None and article.downvote != 0:
+        article.downvote -= 1
+        db.session.delete(articlevote)
+        Tool.articleFlag = -1
     return jsonify({'downvote': article.downvote})
 
 
@@ -329,13 +331,14 @@ def comment_upvote(commentID):
 
     commentvote = CommentVote.query.filter_by(visitor_id=visitor.id, comment_id=commentID).first()
     # didn't vote this article before
-    if commentvote is None:
+    if commentvote is None and Tool.commentFlag != 1:
         commentvote = CommentVote(visitor_id=visitor.id, comment_id=commentID)
         comment.upvote += 1
         db.session.add(commentvote)
         db.session.add(comment)
-    else:
-        return jsonify({'ht': 'you has been voted, please do not submit repeatedly', 'upvote': comment.upvote})
+    elif commentvote is not None and comment.upvote != 0:
+        comment.upvote -= 1
+        db.session.delete(commentvote)
     return jsonify({'upvote': comment.upvote})
 
 
@@ -353,8 +356,11 @@ def comment_downvote(commentID):
         comment.downvote += 1
         db.session.add(commentvote)
         db.session.add(comment)
-    else:
-        return jsonify({'ht': 'you has been voted, please do not submit repeatedly', 'downvote': comment.downvote})
+        Tool.commentFlag = 1
+    elif commentvote is not None and comment.downvote != 0:
+        comment.downvote -=1
+        db.session.delete(commentvote)
+        Tool.commentFlag = -1
     return jsonify({'downvote': comment.downvote})
 
 
@@ -662,7 +668,7 @@ def allowed_file(filename):
 # ===========================================================================
 @app.route("/download/<filename>", methods=['GET'])
 def download_file(filename):
-    # 需要知道2个参数, 第1个参数是本地目录的path, 第2个参数是文件名(带扩展名)
+    # éœ€è¦�çŸ¥é�“2ä¸ªå�‚æ•°, ç¬¬1ä¸ªå�‚æ•°æ˜¯æœ¬åœ°ç›®å½•çš„path, ç¬¬2ä¸ªå�‚æ•°æ˜¯æ–‡ä»¶å��(å¸¦æ‰©å±•å��)
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
 
 
@@ -742,7 +748,7 @@ def author(author_id):
 
 
 if __name__ == '__main__':
-    app.run(port=8080, debug=True)
+    app.run(port=3036, debug=True)
 
 
 
