@@ -715,7 +715,7 @@ def search():
     comments = None
     message = None
 
-    select = request.args.get('select')
+    #select = request.args.get('select')
     content = request.args.get('content')
 
     a = db.session.query(Article).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
@@ -723,14 +723,13 @@ def search():
 
 
 
-    if select == 'article':
-        articles = a
-    if select == 'comment':
-        comments = c
+    #if select == 'article':
+    articles = a
+    #if select == 'comment':
+    comments = c
 
 
-
-
+    
     return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message)
 
 
@@ -748,7 +747,7 @@ def author(author_id):
 
 
 if __name__ == '__main__':
-    app.run(port=3036, debug=True)
+    app.run(port=8080, debug=True)
 
 
 
