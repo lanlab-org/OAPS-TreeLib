@@ -24,21 +24,17 @@ class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     mail = db.Column(db.String(50), unique=True)
     is_banned = db.Column(db.Boolean, default=False)
-
     # OneToMany
     articles = db.relationship('Article', backref='author')
     comments = db.relationship('Comment', backref='author')
-
 
 class Subject(db.Model):
     __tablename__ = 'subjects'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True)
     pid = db.Column(db.Integer)
-
     # OneToMany
     articles = db.relationship('Article', backref='subject')
-
 
 class Article(db.Model):
     __tablename__ = 'articles'
@@ -55,14 +51,8 @@ class Article(db.Model):
     metric = db.Column(db.Float, default=0)
     fpath = db.Column(db.String)
     status = db.Column(db.Integer, default=1)
-
     # OneToMany
     comments = db.relationship('Comment', backref='article')
-
-    # def get_mail(self):
-    #     # db.session.query(Author).filter(Author.id == articles[0].author_id).first().mail
-    #     return db.session.query(Author).filter(Author.id == self.author_id).first().mail
-
 
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -72,11 +62,7 @@ class Comment(db.Model):
     body = db.Column(db.Text)
     upvote = db.Column(db.Integer)
     downvote = db.Column(db.Integer)
-
     time = db.Column(db.DateTime)
-
-    # comment1.article.title
-
 
 # ------------------------------------------------------#
 #              record every visitor's ip               #
@@ -96,25 +82,19 @@ class ArticleVote(db.Model):
     __tablename__ = 'article_votes'
     id = db.Column(db.Integer, primary_key=True)
     visitor_id = db.Column(db.Integer, db.ForeignKey('visitors.id'))
-
     article_id = db.Column(db.Integer)
-    #upvote_state = db.Column(db.Integer)
-
-
+    
 class CommentVote(db.Model):
     __tablename__ = 'comment_votes'
     id = db.Column(db.Integer, primary_key=True)
     visitor_id = db.Column(db.Integer, db.ForeignKey('visitors.id'))
     comment_id = db.Column(db.Integer)
-    #vote_state = db.Column(db.Integer)
-
-
+    
 class VisitVote(db.Model):
     _tablename__ = 'visit_votes'
     id = db.Column(db.Integer, primary_key=True)
     visitor_id = db.Column(db.Integer, db.ForeignKey('visitors.id'))
     article_id = db.Column(db.Integer)
-
 
 class SensitiveWord(db.Model):
     __tablename__ = 'sensitive_words'
@@ -143,7 +123,7 @@ class db_tool:
     def delete_comment_relative(id):
         comment = Comment.query.filter_by(id=id).first()
         comment_vote = CommentVote.query.filter_by(comment_id=id).first()
-
+        
         if comment:
             db.session.delete(comment)
             db.session.commit()
@@ -159,13 +139,7 @@ class db_tool:
             article.status = 0
             db.session.add(article)
             db.session.commit()
-
-
-
-
-
-
-
+            
 # ==============================================================================================
 # Tool class include some usual methods
 # ==============================================================================================
@@ -221,7 +195,7 @@ class Tool:
             return text
         else:
             return result
-
+        
     @staticmethod
     def check_short_time():
         if session.get('last_time') is None:
@@ -233,30 +207,18 @@ class Tool:
             else:
                 session['last_time'] = str(datetime.now().strftime("%Y-%m-%d %H:%M"))
 
-
     # =======================================================================================================
     # @param article orm object
     # @return article's metric
     # =======================================================================================================
     @staticmethod
     def calculate_metric(article):
-        '''
-        newest_comment = Comment.query.filter_by(article_id=article.id).last()
-        Avisit = math.log(article.visit, 10) * 4
-        Ascore = article.upvote - article.downvote
-        Aage = (newest_comment.time - article.time).seconds
-        metric = Avisit * Ascore / Aage
-        article.metric = metric
-        '''
         likes = article.upvote
         dislikes = article.downvote
         visits = article.visit
         comments = Comment.query.filter_by(article_id=article.id).count()
-
         metric = likes * 50 - dislikes * 30 + visits * 10 + comments * 20
         return metric
-
-
 
     @staticmethod
     def email_display_filter(email):
@@ -266,9 +228,8 @@ class Tool:
 
         for i in range(len(pre[len(pre) // 2:])):
             display += '*'
-
+            
         return display + suf
-
 
 # =========================================================================================
 # like and dislike
@@ -277,13 +238,9 @@ class Tool:
 def article_upvote(articleID):
     # get goal article
     article = Article.query.filter_by(id=articleID).first()
-
     ip = session.get('ip')
     visitor = Visitor.query.filter_by(ip=ip).first()
-
     articlevote = ArticleVote.query.filter_by(visitor_id=visitor.id, article_id=articleID).first()
-
-
     # didn't vote this article before
     if articlevote is None and Tool.articleFlag != 1:
         articlevote = ArticleVote(visitor_id=visitor.id, article_id=articleID)
@@ -296,22 +253,18 @@ def article_upvote(articleID):
         db.session.delete(articlevote)
     return jsonify({'upvote': article.upvote})
 
-
 @app.route('/article_downvote/<articleID>')
 def article_downvote(articleID):
     # get goal article
     article = Article.query.filter_by(id=articleID).first()
-
     ip = session.get('ip')
     visitor = Visitor.query.filter_by(ip=ip).first()
-
     articlevote = ArticleVote.query.filter_by(visitor_id=visitor.id, article_id=articleID).first()
     # didn't vote this article before
     if articlevote is None:
         articlevote = ArticleVote(visitor_id=visitor.id, article_id=articleID)
         article.downvote += 1
         article.metric = Tool.calculate_metric(article)
-
         db.session.add(articlevote)
         db.session.add(article)
         Tool.articleFlag = 1
@@ -321,14 +274,12 @@ def article_downvote(articleID):
         Tool.articleFlag = -1
     return jsonify({'downvote': article.downvote})
 
-
 @app.route('/comment_upvote/<commentID>')
 def comment_upvote(commentID):
     # get goal comment
     comment = Comment.query.filter_by(id=commentID).first()
     ip = session.get('ip')
     visitor = Visitor.query.filter_by(ip=ip).first()
-
     commentvote = CommentVote.query.filter_by(visitor_id=visitor.id, comment_id=commentID).first()
     # didn't vote this article before
     if commentvote is None and Tool.commentFlag != 1:
@@ -341,14 +292,12 @@ def comment_upvote(commentID):
         db.session.delete(commentvote)
     return jsonify({'upvote': comment.upvote})
 
-
 @app.route('/comment_downvote/<commentID>')
 def comment_downvote(commentID):
     # get goal comment
     comment = Comment.query.filter_by(id=commentID).first()
     ip = session.get('ip')
     visitor = Visitor.query.filter_by(ip=ip).first()
-
     commentvote = CommentVote.query.filter_by(visitor_id=visitor.id, comment_id=commentID).first()
     # didn't vote this article before
     if commentvote is None:
@@ -363,7 +312,6 @@ def comment_downvote(commentID):
         Tool.commentFlag = -1
     return jsonify({'downvote': comment.downvote})
 
-
 # =========================================================================================
 # check if a email is banned
 # ========================================================================================
@@ -372,9 +320,8 @@ def check_mail(mail):
     author = Author.query.filter_by(mail=mail).first()
     if not author:
         return jsonify('ok')
-    #return jsonify({'isbanned': author.is_banned})
+   
     return jsonify(author.is_banned)
-
 
 # ==================================================================================================
 # subject
@@ -383,8 +330,6 @@ def check_mail(mail):
 def get_subject(subjectID):
     subject = Subject.query.filter_by(id=subjectID).first()
     url = Tool.subject_url(subject)
-
-    # articles = subject.articles
     articles = Article.query.filter_by(subject_id=subject.id, status=1).all()
 
     # ==================================================
@@ -398,34 +343,16 @@ def get_subject(subjectID):
         Article.metric > threshold
     ).all()
 
-    '''
-    if a:
-
-        pivot = random.randint(1, len(a))
-
-        print(pivot)
-
-        for x in a:
-            total += 1
-            if pivot == total:
-                hot_article = x
-    '''
     for x in a:
         hot_article.append(x)
-
-
-
-
+        
     return render_template('subject.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article, Tool=Tool)
-
 
 # ============================================================================================
 # before request
 # ============================================================================================
 @app.before_request
 def before_request():
-    #ip = str(request.remote_addr)
-    #ip = '127.0.0.5'
     ip = IP
     session['ip'] = ip
     visitor = Visitor.query.filter_by(ip=ip).first()
@@ -456,7 +383,6 @@ def before_request():
                 db.session.add(visitvote)
                 db.session.add(article)
 
-
 # ============================================================================================#
 #                                         index                                               #
 # ============================================================================================#
@@ -464,14 +390,12 @@ def before_request():
 def index():
     return render_template('io.html')
 
-
 @app.route('/test')
 def test_one():
     return render_template('test.html')
 
-
 # ============================================================================================#
-# used to out new index after new a subcategory.
+# to create a new index after a new subcategory.
 # ============================================================================================#
 @app.route('/newindex')
 def create_index():
@@ -497,11 +421,8 @@ def create_index():
     out.write('{%  endblock  %}' + '\n')
     out.flush()
     out.close()
-
     return render_template('io.html')
-    # return redirect('/')
-
-
+    
 # ================================================================================
 # Edit and add subject
 # ================================================================================
@@ -529,9 +450,8 @@ def add_sub_category():
                 subject = Subject(name=subject_name)
             db.session.add(subject)
             db.session.flush()
-            # return render_template('add_subcategory.html',)
             create_index()
-        # return render_template('io.html')
+            
         return redirect('/')
     else:
         subject_id = request.args.get('subject_id')
@@ -546,11 +466,11 @@ def add_sub_category():
 def post_article():
     if request.method == 'POST':
         email = request.form['email']
-        # means that author didn't in database now
+        # if the authoe isn't in the DB
         if not Author.query.filter_by(mail=email).first():
             author = Author(mail=email, is_banned=False)
             db.session.add(author)
-
+        # ----------------------------------------------------------------
         # pdf only
         # ----------------------------------------------------------------
         message = 'only pdf file is allowed'
@@ -559,9 +479,7 @@ def post_article():
         if filename != '.pdf':
             return render_template('error.html', message=message)
         # ----------------------------------------------------------------
-
-        # ----------------------------------------------------------------
-        # can not submit in short time
+        # prevent spam submitting
         # ----------------------------------------------------------------
         if Tool.check_short_time() == 'pivot':
             email = request.form['email']
@@ -582,20 +500,12 @@ def post_article():
             db.session.add(article)
             db.session.flush()
             upload_file(article)
-
             return redirect(url_for('get_article', articleID=article.id))
-
-        #return render_template('io.html')
+        
     else:
         email = request.args.get('email')
         subject_id = request.args.get('subject_id')
         return render_template('post_article.html', email=email, subject_id=subject_id)
-
-
-# ==============================================================================================================================
-# add sub category
-# ==============================================================================================================================
-
 
 # ============================================================================================
 # submit after edit
@@ -605,12 +515,9 @@ def post_paper():
     #email = request.args.get('email')
     #subject_id = request.args.get('subject_id')
     pass
-
-
 # =============================================================================================
-# article
+# get article by its id
 # =============================================================================================
-
 @app.route('/article/<articleID>')
 def get_article(articleID):
     article = Article.query.filter_by(id=articleID).first()
@@ -621,11 +528,7 @@ def get_article(articleID):
         db.session.add(article)
 
     comments = article.comments
-    #comments = Comment.query.order_by(Comment.time.desc())
-
-
     return render_template('article.html', article=article, comments=comments, Tool=Tool)
-
 
 # ========================================================================
 # upload pdf file
@@ -633,17 +536,13 @@ def get_article(articleID):
 @app.route('/postPdf', methods=['GET', 'POST'])
 def upload_file(article):
     if request.method == 'POST':
-
         file = request.files['file']
 
-        # session['filename'] = file.filename
         if file and allowed_file(file.filename):
             print('filename:--------------' + file.filename)
             u = str(uuid.uuid1())
             file.filename = u + file.filename
             filename = secure_filename(file.filename)
-            #
-            # print(article.title)
             article.fpath = filename
             db.session.add(article)
             db.session.flush()
@@ -652,25 +551,20 @@ def upload_file(article):
     else:
         return render_template('io.html')
 
-
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename)
 
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 # ===========================================================================
 # download pdf file
 # ===========================================================================
 @app.route("/download/<filename>", methods=['GET'])
 def download_file(filename):
-    # éœ€è¦�çŸ¥é�“2ä¸ªå�‚æ•°, ç¬¬1ä¸ªå�‚æ•°æ˜¯æœ¬åœ°ç›®å½•çš„path, ç¬¬2ä¸ªå�‚æ•°æ˜¯æ–‡ä»¶å��(å¸¦æ‰©å±•å��)
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
-
 
 # ======================================================================
 # post comment
@@ -686,7 +580,7 @@ def post_comment(articleID):
     email = request.form['email']
     body = request.form['body']
     time = datetime.now()
-    # means that author didn't in database now
+    #if the author isn't in the DB
     if not Author.query.filter_by(mail=email).first():
         author = Author(mail=email, is_banned=False)
         db.session.add(author)
@@ -714,22 +608,13 @@ def search():
     articles = None
     comments = None
     message = None
-
-    #select = request.args.get('select')
+    
     content = request.args.get('content')
-
     a = db.session.query(Article).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
     c = db.session.query(Comment).filter(Comment.body.contains(content))
-
-
-
-    #if select == 'article':
     articles = a
-    #if select == 'comment':
     comments = c
 
-
-    
     return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message)
 
 
@@ -747,7 +632,7 @@ def author(author_id):
 
 
 if __name__ == '__main__':
-    app.run(port=8080, debug=True)
+    app.run(port=3036, debug=True)
 
 
 
