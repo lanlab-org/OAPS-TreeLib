@@ -1,0 +1,26 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+<div style="padding-top: 250px;">
+<Table align="center">
+    <form action="/login" method="POST">
+        <tr>
+        <td>Email</td>
+        <td><input type="email" name="email"></td>
+        </tr>
+        <tr>
+        <td>Password</td>
+        <td><input type="password" name="pass"></td>
+        </tr>
+        <tr>
+        <td><button class="btn btn-secondary" type="submit">Login</button></td>
+        <td>{% if error %}
+                <div style="color: red;">{{ error }}</div>
+            {% endif %}</td>
+        </tr>
+        
+    </form>
+</Table>
+</div>
+{% endblock %}

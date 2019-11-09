@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
 db = SQLAlchemy(app)
-IP = '127.0.0.10'
+IP = '168.0.0.10'
 class Author(db.Model):
     __tablename__ = 'authors'
     id = db.Column(db.Integer, primary_key=True)
@@ -52,7 +52,7 @@ class Article(db.Model):
     fpath = db.Column(db.String)
     status = db.Column(db.Integer, default=1)
     # OneToMany
-    comments = db.relationship('Comment', backref='article')
+    comments = db.relationship('Comment', backref='article', cascade='all,delete-orphan')
 
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -64,6 +64,7 @@ class Comment(db.Model):
     downvote = db.Column(db.Integer)
     time = db.Column(db.DateTime)
 
+
 # ------------------------------------------------------#
 #              record every visitor's ip               #
 # ------------------------------------------------------#
@@ -72,7 +73,6 @@ class Visitor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ip = db.Column(db.String(50), unique=True)
     is_banned = db.Column(db.Boolean, default=False)
-
     # OneToMangy
     article_votes = db.relationship('ArticleVote', backref='visitor')
     comment_votes = db.relationship('CommentVote', backref='visitor')
@@ -83,13 +83,14 @@ class ArticleVote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     visitor_id = db.Column(db.Integer, db.ForeignKey('visitors.id'))
     article_id = db.Column(db.Integer)
-    
+
+
 class CommentVote(db.Model):
     __tablename__ = 'comment_votes'
     id = db.Column(db.Integer, primary_key=True)
     visitor_id = db.Column(db.Integer, db.ForeignKey('visitors.id'))
     comment_id = db.Column(db.Integer)
-    
+
 class VisitVote(db.Model):
     _tablename__ = 'visit_votes'
     id = db.Column(db.Integer, primary_key=True)
@@ -101,45 +102,15 @@ class SensitiveWord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String(50))
 
-    # =========================================================================
-    # operating db by primary key
-    # =========================================================================
-class db_tool:
+class Admin(db.Model):
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
 
-    @staticmethod
-    def delete_article_relative(id):
-        article = Article.query.filter_by(id=id).first()
-        article_vote = ArticleVote.query.filter_by(article_id=id).first()
-
-        if article:
-            db.session.delete(article)
-            db.session.commit()
-
-        if article_vote:
-            db.session.delete(article_vote)
-            db.session.commit()
-
-    @staticmethod
-    def delete_comment_relative(id):
-        comment = Comment.query.filter_by(id=id).first()
-        comment_vote = CommentVote.query.filter_by(comment_id=id).first()
-        
-        if comment:
-            db.session.delete(comment)
-            db.session.commit()
-
-        if comment_vote:
-            db.session.delete(comment_vote)
-            db.session.commit()
-
-    @staticmethod
-    def hide_article(id):
-        article = Article.query.filter_by(id=id).first()
-        if article:
-            article.status = 0
-            db.session.add(article)
-            db.session.commit()
-            
+    __tablename__ = 'admins'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(50), nullable=False)
 # ==============================================================================================
 # Tool class include some usual methods
 # ==============================================================================================
@@ -190,19 +161,18 @@ class Tool:
                 result = text.replace(line.strip(), '**')
                 text = result
         f.close()
-
         if flag:
             return text
         else:
             return result
-        
+
     @staticmethod
     def check_short_time():
         if session.get('last_time') is None:
             session['last_time'] = str(datetime.now().strftime("%Y-%m-%d %H:%M"))
         else:
             x = (datetime.now() - datetime.strptime(session.get('last_time'), "%Y-%m-%d %H:%M")).seconds
-            if x < 120:
+            if x < 10:
                 return "pivot"
             else:
                 session['last_time'] = str(datetime.now().strftime("%Y-%m-%d %H:%M"))
@@ -225,10 +195,9 @@ class Tool:
         pre = email[:email.rfind('@')]
         display = pre[:len(pre) // 2]
         suf = email[email.rfind('@') + 1:]
-
         for i in range(len(pre[len(pre) // 2:])):
             display += '*'
-            
+
         return display + suf
 
 # =========================================================================================
@@ -241,6 +210,7 @@ def article_upvote(articleID):
     ip = session.get('ip')
     visitor = Visitor.query.filter_by(ip=ip).first()
     articlevote = ArticleVote.query.filter_by(visitor_id=visitor.id, article_id=articleID).first()
+
     # didn't vote this article before
     if articlevote is None and Tool.articleFlag != 1:
         articlevote = ArticleVote(visitor_id=visitor.id, article_id=articleID)
@@ -298,6 +268,7 @@ def comment_downvote(commentID):
     comment = Comment.query.filter_by(id=commentID).first()
     ip = session.get('ip')
     visitor = Visitor.query.filter_by(ip=ip).first()
+
     commentvote = CommentVote.query.filter_by(visitor_id=visitor.id, comment_id=commentID).first()
     # didn't vote this article before
     if commentvote is None:
@@ -320,7 +291,6 @@ def check_mail(mail):
     author = Author.query.filter_by(mail=mail).first()
     if not author:
         return jsonify('ok')
-   
     return jsonify(author.is_banned)
 
 # ==================================================================================================
@@ -337,15 +307,13 @@ def get_subject(subjectID):
     # ==================================================
     hot_article = []
     total = 0
-
     a = db.session.query(Article).filter(
         Article.subject_id == subject.id,
         Article.metric > threshold
     ).all()
-
     for x in a:
         hot_article.append(x)
-        
+
     return render_template('subject.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article, Tool=Tool)
 
 # ============================================================================================
@@ -360,7 +328,7 @@ def before_request():
         visitor = Visitor(ip=ip)
         db.session.add(visitor)
     else:
-        # banned ip, can not visitor
+        # banned ip, can not visit
         if Visitor.query.filter_by(ip=ip).first().is_banned:
             print('you have beenn banned')
             return render_template('error.html', message='you have beenn banned')
@@ -368,13 +336,12 @@ def before_request():
         # ======================================================================================
         # from now on, ip is valid
         # ======================================================================================
-
         # about visit of a article
         if request.path.startswith('/article'):
             article_id = Tool.find_path_last_id(request.path)
             visitor = Visitor.query.filter_by(ip=ip).first()
             visitvote = VisitVote.query.filter_by(visitor_id=visitor.id, article_id=article_id).first()
-            # first visit this article
+            # first visit to this article
             if visitvote is None:
                 article = Article.query.filter_by(id=article_id).first()
                 article.visit += 1
@@ -395,7 +362,7 @@ def test_one():
     return render_template('test.html')
 
 # ============================================================================================#
-# to create a new index after a new subcategory.
+# used to out new index after new a subcategory.
 # ============================================================================================#
 @app.route('/newindex')
 def create_index():
@@ -422,7 +389,7 @@ def create_index():
     out.flush()
     out.close()
     return render_template('io.html')
-    
+
 # ================================================================================
 # Edit and add subject
 # ================================================================================
@@ -451,13 +418,11 @@ def add_sub_category():
             db.session.add(subject)
             db.session.flush()
             create_index()
-            
         return redirect('/')
     else:
         subject_id = request.args.get('subject_id')
         if request.args.get('add_father') == 'father':
             subject_id = str(None)
-
         return render_template('add_subcategory.html', subject_id=subject_id)
 # ============================================================================================
 # edit page
@@ -466,11 +431,11 @@ def add_sub_category():
 def post_article():
     if request.method == 'POST':
         email = request.form['email']
-        # if the authoe isn't in the DB
+        # means that author isn't in database now
         if not Author.query.filter_by(mail=email).first():
             author = Author(mail=email, is_banned=False)
             db.session.add(author)
-        # ----------------------------------------------------------------
+
         # pdf only
         # ----------------------------------------------------------------
         message = 'only pdf file is allowed'
@@ -479,7 +444,9 @@ def post_article():
         if filename != '.pdf':
             return render_template('error.html', message=message)
         # ----------------------------------------------------------------
-        # prevent spam submitting
+
+        # ----------------------------------------------------------------
+        # prevent posting repeatedlly in a short period of time
         # ----------------------------------------------------------------
         if Tool.check_short_time() == 'pivot':
             email = request.form['email']
@@ -487,7 +454,7 @@ def post_article():
             title = request.form['title']
             abstract = request.form['abstract']
             highlight = request.form['highlight']
-            message = 'You post too many time in short time!'
+            message = 'You can\'t post articles repeatedlly!'
             return render_template('error.html', message=message)
         else:
             author_id = Author.query.filter_by(mail=email).first().id
@@ -501,22 +468,14 @@ def post_article():
             db.session.flush()
             upload_file(article)
             return redirect(url_for('get_article', articleID=article.id))
-        
+
     else:
         email = request.args.get('email')
         subject_id = request.args.get('subject_id')
         return render_template('post_article.html', email=email, subject_id=subject_id)
 
-# ============================================================================================
-# submit after edit
-# ============================================================================================
-@app.route('/postpaper', methods=['POST'])
-def post_paper():
-    #email = request.args.get('email')
-    #subject_id = request.args.get('subject_id')
-    pass
 # =============================================================================================
-# get article by its id
+# article
 # =============================================================================================
 @app.route('/article/<articleID>')
 def get_article(articleID):
@@ -537,7 +496,6 @@ def get_article(articleID):
 def upload_file(article):
     if request.method == 'POST':
         file = request.files['file']
-
         if file and allowed_file(file.filename):
             print('filename:--------------' + file.filename)
             u = str(uuid.uuid1())
@@ -574,13 +532,13 @@ def post_comment(articleID):
     if Tool.check_short_time() == 'pivot':
         email = request.form['email']
         body = request.form['body']
-        message = 'You post too many time in short time!'
+        message = 'You have posted too many comments repeatedlly, please don\'t spam!'
         return render_template('error.html', message=message)
 
     email = request.form['email']
     body = request.form['body']
     time = datetime.now()
-    #if the author isn't in the DB
+    # author is not in the database
     if not Author.query.filter_by(mail=email).first():
         author = Author(mail=email, is_banned=False)
         db.session.add(author)
@@ -592,7 +550,6 @@ def post_comment(articleID):
     article.metric = Tool.calculate_metric(article)
     return redirect(url_for('get_article', articleID=articleID))
 
-
 # ===============================================================================
 # donation
 # ===============================================================================
@@ -600,6 +557,101 @@ def post_comment(articleID):
 def donaton():
     return render_template('donation.html')
 
+@app.route('/login',methods=['POST','GET'])
+def login_verfaication():
+    #admins login verification function
+    #fetch the email and password from the html login form
+    email = request.form['email']
+    password = request.form['pass']
+    #check if it's exists in the database.
+    validate = db.session.query(Admin).filter_by(email=email,password=password).first()
+
+    #allow access
+    if validate:
+        session['logged_in'] = True
+        return redirect('/admin')
+    else:
+        #handle error
+        error = 'invalid username or password!'
+        return render_template('login.html',error = error)
+
+@app.route('/admin')
+def admin():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        articles = Article.query.all()
+        comments = Comment.query.all()
+        return render_template('admin.html',articles=articles,comments=comments)
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return redirect('/')
+
+@app.route('/deletec/<int:id>')
+def delete_comment(id):
+    #delete the comment and its relating records from the database.
+    comment = Comment.query.filter_by(id=id).first()
+    comment_vote = CommentVote.query.filter_by(comment_id=id).first()
+    
+    try:
+        #delete the comment
+        if comment:
+            db.session.delete(comment)
+            db.session.commit()
+        #delete its vote counter
+        if comment_vote:
+            db.session.delete(comment_vote)
+            db.session.commit()
+        return redirect('/admin')
+    except:
+        return 'Error deleting comment!.'
+@app.route('/deletea/<int:id>')
+def delete_article(id):
+        #to delete an article, we have to consider deleting all its relating values
+        #from the database. so for each article first select the article, then all its related records.
+        article = Article.query.filter_by(id=id).first()
+        visit_vote = VisitVote.query.filter_by(article_id=id).first()
+        article_vote = ArticleVote.query.filter_by(article_id=id).first()
+        article_comment = Comment.query.filter_by(article_id=id).all()
+
+        #if the article has comments, delete them also
+        for comment in article_comment:
+            delete_comment(comment.id)
+
+        try:
+            #delete everything related to the article.
+            if article:
+                db.session.delete(article)
+                db.session.delete(visit_vote)
+                db.session.delete(article_vote)
+                db.session.commit()
+
+            return redirect('/admin')
+        except:
+            return 'Error deleting article!.'
+
+@app.route('/article_is_hidden/<int:id>')
+def article_is_hidden(id):
+        #select the article by its id number
+        article = Article.query.filter_by(id=id).first()
+        #if there is an article with the given id number...
+        if article:
+            try:
+                #if the article status is available switch it into hidden..
+                if article.status == 1:
+                    article.status = 0
+                    db.session.add(article)
+                    db.session.commit()
+                #if it's hidden switch it into available
+                elif article.status == 0:
+                    article.status = 1
+                    db.session.add(article)
+                    db.session.commit()
+                return redirect('/admin')
+            except:
+                return 'Error hiding the article!'
 # ===========================================================================
 # search function
 # ===========================================================================
@@ -608,20 +660,20 @@ def search():
     articles = None
     comments = None
     message = None
-    
+
     content = request.args.get('content')
+
     a = db.session.query(Article).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
     c = db.session.query(Comment).filter(Comment.body.contains(content))
+
     articles = a
     comments = c
-
+    
     return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message)
-
 
 @app.route('/error/<message>')
 def error(message):
     return render_template('error.html', message=message)
-
 
 @app.route('/author/<author_id>')
 def author(author_id):
@@ -629,10 +681,8 @@ def author(author_id):
     comments = Comment.query.order_by(Comment.time.desc()).filter_by(author_id=author_id).all()
     return render_template('author.html', articles=articles, comments=comments, Tool=Tool)
 
-
-
 if __name__ == '__main__':
-    app.run(port=3036, debug=True)
+    app.run(port=8080, debug=True)
 
 
 

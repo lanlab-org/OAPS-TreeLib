@@ -1,0 +1,50 @@
+{% extends "template.html" %}
+
+
+
+{% block content %}
+    {% if session['logged_in'] %}
+    <table id="articles" border="1" align="center" style="width: 100%;">
+            <h2 align="center">Articles</h2>
+            {% for article in articles %}
+        <tr>
+            <td>
+                    <a href="/article/{{ article.id }}">{{ article.title }}</a>
+            </td>
+            <td>
+                    <a href="/deletea/{{article.id}}">Delete</a></br>
+                    <a href="/article_is_hidden/{{ article.id }}">Hide/Show</a>
+            </td>
+            {% if article.status == 0 %}
+            <td>Hidden</td>
+            {% elif article.status == 1 %}
+            <td>Available</td>
+            {% endif %}
+        </tr>
+            {% endfor %}
+    </table>
+        
+
+        
+    <table id="comments" border="1" align="center" style="width: 100%;">
+            <h2 align="center">comments</h2>
+            {% for comment in comments %}
+        <tr>
+            <td>
+                    <a href="/article/{{ comment.article_id }}">{{ comment.body }}</a>
+            </td>
+            <td>
+                    <a href="/deletec/{{comment.id}}">Delete</a>
+            </td>
+        </tr>
+            {% endfor %}
+    </table>
+    
+</br>
+</br>
+</br>
+</br>
+</br>
+    <a href="/logout">logout</a>
+    {% endif %}
+{% endblock %}
