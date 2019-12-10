@@ -682,7 +682,7 @@ def author(author_id):
     return render_template('author.html', articles=articles, comments=comments, Tool=Tool)
 
 if __name__ == '__main__':
-    app.run(port=8080, debug=True)
+    app.run(debug=True)
 
 
 
