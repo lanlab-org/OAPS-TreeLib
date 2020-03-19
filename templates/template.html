@@ -19,6 +19,25 @@
         <!-- ajax -->
         <script src="http://how2j.cn/study/axios.min.js"></script>
 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+	<script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+    <style>
+
+        footer{
+  background-color: #323a3a;
+  color: #fffa;
+  padding-top: 2rem;
+}
+hr.light{
+  border-top: 1px solid #d5d5d5;
+  width: 75%;
+  margin-top: .8rem;
+  margin-bottom: 1rem;
+}
+    </style>
+
+
     {% block head %}
 
     {% endblock %}
@@ -32,9 +51,6 @@
         <li class="nav-item">
           <a class="nav-link" href="/donation">Donation</a>
                </li>
-               <li class="nav-item">
-          <a class="nav-link" href="#">About Us</a>
-        </li>
         <li class="nav-item">
           <a class="nav-link" href="/admin">admin</a>
         </li>
@@ -49,7 +65,7 @@
     </nav>
 
 
-    <div class="col-sm-8 container">
+    <div style="font-size: 20px; line-height: 1.8; text-shadow: 0.3px 0.3px black; font-family: Times, serif;" class="col-sm-10 container">
     {% block content %}
 
     {% endblock %}
@@ -59,4 +75,35 @@
 
     </div>
 </body>
+ <br>
+    <br>
+    <br>
+
+<footer>
+<div class="container-fluid padding">
+	<div class="row text-center">
+		<div class="col-md-6">
+			<hr class="light">
+			<h5>Contact Us</h5>
+			<hr class="light">
+			<p>Phone: 131-7551-6271</p>
+			<p>Email: i.leaderx@hotmail.com</p>
+			<p>Add: jinhua, zhejiang, 321000</p>
+		</div>
+		<div class="col-md-6">
+			<hr class="light">
+			<h5>About Us</h5>
+			<hr class="light">
+			<p>Name: Crackers Team</p>
+			<p>Members: WARD, HEMO, SAEED, MOHAMMED</p>
+			<p>Further Support: Send us email</p>
+		</div>
+
+		<div class="col-12">
+				<hr class="light">
+				<h5>&copy; Crackers.com</h5>
+		</div>
+	</div>
+</div>
+</footer>
 </html>
