@@ -523,6 +523,12 @@ def allowed_file(filename):
 @app.route("/download/<filename>", methods=['GET'])
 def download_file(filename):
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
+# ===========================================================================
+# preview pdf file
+# ===========================================================================
+@app.route("/preview/<filename>", methods=['GET'])
+def preview_file(filename):
+    return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename)
 
 # ======================================================================
 # post comment
