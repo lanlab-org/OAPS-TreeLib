@@ -31,3 +31,7 @@ Administrators now, can manipulate the website by, deleting articles/comments, a
 Since the library is an open access srvice, such a functionality is needed to monitor any inappropriate posts or articles.</br>
 For now, administrators can be granted access to the website by the maintainers. However, in the future this can be changed.</br>
 See commit https://github.com/hema-001/TreeLib/commit/8263abaa2c63882bf2e984ca9a2f809319182462 for more details.
+
+# Contributor List
+
+(Please write your name below.)
