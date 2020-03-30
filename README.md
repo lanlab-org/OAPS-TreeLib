@@ -1,7 +1,7 @@
 # TreeLib
 
 TreeLib is a simple online application that provides open access
-publishing service, for authors who love to share their ideas and
+publishing service to authors who love to share their ideas and
 findings in a non-blocking fashion.  The author could publish an
 article as long as he provides a valid email address.  No need to sign
 up.
