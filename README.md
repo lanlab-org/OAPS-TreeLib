@@ -9,6 +9,8 @@ up.
 Check this link http://lanlab.org/course/2018f/oo/project_description.pdf for more detail.
 
 
+
+
 ## Mission
 
 TreeLib puts authors' needs first and values massive review.
@@ -17,7 +19,6 @@ TreeLib puts authors' needs first and values massive review.
 
 
 # Version History
-
 
 ## Ibrahim M.I Ismail & Yussuf Mohamed Mahdi maintained the software in 2019.
 
@@ -49,4 +50,7 @@ Project home page: http://118.25.96.118/gsrycloud/TreeLib/
 
 # Contributor List
 
-(Please write your name below.)
+- Bob984456043-包振丰-201732120111
+- ZhenCi-陈真赐-201732120114
+- dzr201732120115-戴泽荣-201732120115
+- ileaderx-WARD-201732120143
