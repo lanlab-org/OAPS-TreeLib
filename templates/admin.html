@@ -1,24 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
 {% extends "template.html" %}
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
+</head>
 
-
+<body>
 {% block content %}
     {% if session['logged_in'] %}
-    <table id="articles" border="1" align="center" style="width: 100%;">
-            <h2 align="center">Articles</h2>
+    <table id="articles" border="1" align="center" style="width: 70%; margin-top:30px;">
+            <h2 style="margin-top:30px;" align="center">Articles</h2>
             {% for article in articles %}
         <tr>
-            <td>
+            <td class="text" align="center" bgcolor="#E5E4E2">
                     <a href="/article/{{ article.id }}">{{ article.title }}</a>
             </td>
             <td>
-                    <a href="/deletea/{{article.id}}">Delete</a></br>
-                    <a href="/article_is_hidden/{{ article.id }}">Hide/Show</a>
+                <a style="float:left; margin-left: 20px; margin-top: 10px; margin-bottom: 10px;" href="/deletea/{{article.id}}"><button class="btn btn-primary">Delete</button></a>
+                <a style="float:right; margin-right: 20px; margin-top: 10px; margin-bottom: 10px;" href="/article_is_hidden/{{ article.id }}"><button class="btn btn-primary">Hide/Show</button></a>
             </td>
             {% if article.status == 0 %}
-            <td>Hidden</td>
+            <td style="color: #306eff;" bgcolor="#E5E4E2" align="center">Hidden</td>
             {% elif article.status == 1 %}
-            <td>Available</td>
+            <td style="color: #306eff;" bgcolor="#E5E4E2" align="center">Available</td>
             {% endif %}
         </tr>
             {% endfor %}
@@ -26,15 +31,15 @@
         
 
         
-    <table id="comments" border="1" align="center" style="width: 100%;">
-            <h2 align="center">comments</h2>
+    <table id="comments" border="1" align="center" style="width: 70%; margin-top:30px;">
+            <h2 style="margin-top:30px;" align="center">comments</h2>
             {% for comment in comments %}
         <tr>
-            <td>
+            <td bgcolor="#E5E4E2" align="center">
                     <a href="/article/{{ comment.article_id }}">{{ comment.body }}</a>
             </td>
             <td>
-                    <a href="/deletec/{{comment.id}}">Delete</a>
+                <a href="/deletec/{{comment.id}}"><button style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-primary">Delete</button></a>
             </td>
         </tr>
             {% endfor %}
@@ -45,6 +50,9 @@
 </br>
 </br>
 </br>
-    <a href="/logout">logout</a>
+    <a href="/logout"><button style="padding:12px 18px 12px;" class="btn btn-primary btn-lg">logout</button></a>
     {% endif %}
+
 {% endblock %}
+</body>
+</html>
