@@ -20,7 +20,9 @@ TreeLib puts authors' needs first and values massive review.
 
 # Version History
 
-## Ibrahim M.I Ismail & Yussuf Mohamed Mahdi maintained the software in 2019.
+## Ibrahim M.I Ismail & Yussuf Mohamed Mahdi
+
+Ibrahim M.I Ismail & Yussuf Mohamed Mahdi maintained the software in 2019.
 
 GitHub repo: https://github.com/hema-001/TreeLib
 
@@ -43,7 +45,9 @@ For now, administrators can be granted access to the website by the maintainers.
 See commit https://github.com/hema-001/TreeLib/commit/8263abaa2c63882bf2e984ca9a2f809319182462 for more details.
 
 
-## Yun Dabang & Ni Zhongjie developed the first version of TreeLib in 2018.
+## Yun Dabang & Ni Zhongjie
+
+Yun Dabang & Ni Zhongjie developed the first version of TreeLib in 2018.
 
 Project home page: http://118.25.96.118/gsrycloud/TreeLib/
 
