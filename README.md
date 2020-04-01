@@ -17,10 +17,38 @@ TreeLib puts authors' needs first and values massive review.
 
 
 
+# How to Contribute
+
+We welcome your participation in this project.
+
+Your participation does not have to be in the form of contributing code. You could help us on ideas, suggestions, documentation, etc.
+
+You need to be an invited member of Lan Laboratory before you can push your feature branch or bugfix branch to the central reops at https://github.com/lanlab-org
+
+Send Hui (lanhui at zjnu.edu.cn) an email message including your GitHub account name so that he could invite you to be a member of Lan Laboratory.
+
+As of March 31 2020, there are 30 members in Lan Laboratory (https://github.com/orgs/lanlab-org/people).
+
+You will use the feature-branching workflow (see below) when interacting with the central repo. The main point of this workflow is that you work on a branch on your local drive, push that branch to the central repo, and create a Pull Request (i.e., Pull Me Request) at GitHub for other people to review your changes. When everything is OK, then someone could merge your changes to the master branch in the central repo.
+
+I believe that code review at the Pull Request stage is important for both improving code quality and improving team quality.
+
+
+## The Feature-branching Workflow
+
+We will use the feature-branching workflow for collaboration. The idea is that you make your own branch, work on it, and push this branch to the central repo for review.
+
+Check the section The feature-branching workflow in the following link for more detail:
+
+https://github.com/spm2020spring/TeamCollaborationTutorial/blob/master/team.rst
+
+
 
 # Version History
 
-## Ibrahim M.I Ismail & Yussuf Mohamed Mahdi maintained the software in 2019.
+## Ibrahim M.I Ismail & Yussuf Mohamed Mahdi
+
+Ibrahim M.I Ismail & Yussuf Mohamed Mahdi maintained the software in 2019.
 
 GitHub repo: https://github.com/hema-001/TreeLib
 
@@ -43,7 +71,9 @@ For now, administrators can be granted access to the website by the maintainers.
 See commit https://github.com/hema-001/TreeLib/commit/8263abaa2c63882bf2e984ca9a2f809319182462 for more details.
 
 
-## Yun Dabang & Ni Zhongjie developed the first version of TreeLib in 2018.
+## Yun Dabang & Ni Zhongjie
+
+Yun Dabang & Ni Zhongjie developed the first version of TreeLib in 2018.
 
 Project home page: http://118.25.96.118/gsrycloud/TreeLib/
 
