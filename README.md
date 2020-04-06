@@ -80,11 +80,6 @@ Project home page: http://118.25.96.118/gsrycloud/TreeLib/
 
 # Contributor List
 
-- Bob984456043-包振丰-201732120111
-- ZhenCi-陈真赐-201732120114
-- dzr201732120115-戴泽荣-201732120115
-- ileaderx-WARD-201732120143
-- sanoussibarkay--barkay sanoussi sanoussi--201732120151
-- AhamedSabuj--ahamed sabuj--201732120141
-- charif13282--hossain arif--201732120157
-- Agonza--agonza lewis conrad--201732120140
+- karro26-陈冬卉-201732120102
+- -陈金龙-201732120112
+- Weichao-Chen-陈伟超-201732120113
