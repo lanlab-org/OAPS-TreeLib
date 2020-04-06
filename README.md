@@ -81,5 +81,5 @@ Project home page: http://118.25.96.118/gsrycloud/TreeLib/
 # Contributor List
 
 - karro26-陈冬卉-201732120102
-- Joffool-陈金龙-201732120112
+- -陈金龙-201732120112
 - Weichao-Chen-陈伟超-201732120113
