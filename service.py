@@ -687,6 +687,11 @@ def author(author_id):
     comments = Comment.query.order_by(Comment.time.desc()).filter_by(author_id=author_id).all()
     return render_template('author.html', articles=articles, comments=comments, Tool=Tool)
 
+@app.route('/recent')
+def example():
+    articles = Article.query.order_by(Article.time).all()
+    return render_template("recentlyuploaded.html", articles=articles)
+
 if __name__ == '__main__':
     app.run(debug=True)
 
