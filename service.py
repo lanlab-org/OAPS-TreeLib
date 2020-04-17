@@ -683,9 +683,10 @@ def error(message):
 
 @app.route('/author/<author_id>')
 def author(author_id):
+    author = Author.query.filter_by(id=author_id).first()
     articles = Article.query.order_by(Article.time.desc()).filter_by(author_id=author_id).all()
     comments = Comment.query.order_by(Comment.time.desc()).filter_by(author_id=author_id).all()
-    return render_template('author.html', articles=articles, comments=comments, Tool=Tool)
+    return render_template('author.html', articles=articles, comments=comments, Tool=Tool, author=author)
 
 if __name__ == '__main__':
     app.run(debug=True)
