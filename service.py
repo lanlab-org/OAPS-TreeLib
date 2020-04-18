@@ -688,8 +688,8 @@ def author(author_id):
     return render_template('author.html', articles=articles, comments=comments, Tool=Tool)
 
 @app.route('/recent')
-def example():
-    articles = Article.query.order_by(Article.time).all()
+def sort_articles():
+    articles = Article.query.order_by(Article.time.desc()).all()
     return render_template("recentlyuploaded.html", articles=articles)
 
 if __name__ == '__main__':

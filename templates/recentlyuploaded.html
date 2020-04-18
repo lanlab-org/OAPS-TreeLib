@@ -1,54 +1,18 @@
 {% extends "template.html" %}
-
 {% block content %}
-
     {% if articles%}
         <table class="table table-hover table-striped">
-    <head>
-      <tr>
-          <th>subject</th>
-        <th>title</th>
-        <th>author</th>
-        <th>time</th>
-          <th>population</th>
-      </tr>
-    </head>
-    <body>
-        {% for article in articles %}
-            <td><a href="/subject/{{ article.subject_id }}">{{ article.subject.name }}</a></td>
-            <td><a href="/article/{{ article.id }}">{{ article.title }}</a></td>
-
-            <td>{{ article.time.strftime("%Y-%m-%d %H:%M") }}</td>
-
-        </tr>
-        {% endfor %}
-    </body>
-  </table>
-
+          <tr>
+            <th>subject</th>
+            <th>title</th>
+            <th>time</th>
+          </tr>
+            {% for article in articles %}
+                <td><a href="/subject/{{ article.subject_id }}">{{ article.subject.name }}</a></td>
+                <td><a href="/article/{{ article.id }}">{{ article.title }}</a></td>
+                <td>{{ article.time.strftime("%Y-%m-%d %H:%M") }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     {% endif %}
-
-
-    {% if comments%}
-        <table class="table table-hover table-striped">
-    <head>
-      <tr>
-          <th>article_title</th>
-        <th>comment</th>
-        <th>time</th>
-        <th>author</th>
-      </tr>
-    </head>
-    <body>
-        {% for comment in comments %}
-        <tr>
-            <td><a href="/article/{{ comment.article_id }}">{{ comment.article.title }}</a></td>
-
-            <td>{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</td>
-            <td><a href="/author/{{ comment.author_id }}">{{ Tool.email_display_filter(comment.author.mail) }}</a></td>
-        </tr>
-        {% endfor %}
-    </body>
-  </table>
-    {% endif %}
-
 {% endblock %}
