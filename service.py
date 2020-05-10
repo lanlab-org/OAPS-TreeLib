@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
 db = SQLAlchemy(app)
-IP = '168.0.0.10'
+IP = '127.0.0.1'
 class Author(db.Model):
     __tablename__ = 'authors'
     id = db.Column(db.Integer, primary_key=True)
@@ -523,6 +523,22 @@ def allowed_file(filename):
 @app.route("/download/<filename>", methods=['GET'])
 def download_file(filename):
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
+
+# ===========================================================================
+# show pdf file
+# ===========================================================================
+@app.route("/show/<filename>", methods=['GET'])
+def show_file(filename):
+    file_dir = os.path.join(basedir, app.config['UPLOAD_FOLDER'])
+    if request.method == 'GET':
+        if filename is None:
+            pass
+        else:
+            pdf_data = open(os.path.join(file_dir, '%s' % filename), "rb").read()
+            response = make_response(pdf_data)
+            response.headers['Content-Type'] = 'application/pdf'
+            return response
+
 # ===========================================================================
 # preview pdf file
 # ===========================================================================
