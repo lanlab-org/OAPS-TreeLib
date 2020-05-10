@@ -106,7 +106,7 @@
 
 
         <a href="{{ url_for('download_file', filename=article.fpath) }}"><button class="btn btn-primary" style="float:right" >download pdf</button></a><!--pdf download link-->
-
+        <a href="{{ url_for('show_file', filename=article.fpath) }}"><button class="btn btn-primary" style="float:right" >show pdf</button></a><!--pdf show link-->
         <a href="{{ url_for('preview_file', filename=article.fpath) }}"><button class="btn btn-primary" style="float:left" >preview</button></a>
     
      </div>
