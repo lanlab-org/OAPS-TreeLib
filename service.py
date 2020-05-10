@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os, uuid ,math, random
-from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory
+from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory, make_response
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
