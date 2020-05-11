@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os, uuid ,math, random
-from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory
+from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory, make_response
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
@@ -529,7 +529,16 @@ def download_file(filename):
 # ===========================================================================
 @app.route("/show/<filename>", methods=['GET'])
 def show_file(filename):
-    return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, mimetype='application/pdf')
+    file_dir = os.path.join(basedir, app.config['UPLOAD_FOLDER'])
+    if request.method == 'GET':
+        if filename:
+            # show the file
+            pdf_data = open(os.path.join(file_dir, '%s' % filename), "rb").read()
+            response = make_response(pdf_data)
+            response.headers['Content-Type'] = 'application/pdf'
+            return response
+    else:
+        pass
 
 # ===========================================================================
 # preview pdf file
