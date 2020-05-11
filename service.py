@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os, uuid ,math, random
-from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory, make_response
+from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
 db = SQLAlchemy(app)
-IP = '127.0.0.1'
+IP = '168.0.0.10'
 class Author(db.Model):
     __tablename__ = 'authors'
     id = db.Column(db.Integer, primary_key=True)
@@ -529,15 +529,7 @@ def download_file(filename):
 # ===========================================================================
 @app.route("/show/<filename>", methods=['GET'])
 def show_file(filename):
-    file_dir = os.path.join(basedir, app.config['UPLOAD_FOLDER'])
-    if request.method == 'GET':
-        if filename is None:
-            pass
-        else:
-            pdf_data = open(os.path.join(file_dir, '%s' % filename), "rb").read()
-            response = make_response(pdf_data)
-            response.headers['Content-Type'] = 'application/pdf'
-            return response
+    return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, mimetype='application/pdf')
 
 # ===========================================================================
 # preview pdf file
