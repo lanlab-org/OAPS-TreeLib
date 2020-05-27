@@ -71,6 +71,18 @@
             }
     }
 
+    // delete comment
+    function delete_comment(){
+
+    document.querySelector('.bg-modal').style.display = 'flex';
+
+    }
+
+    function close_email() {
+
+    document.querySelector('.bg-modal').style.display='none';
+    }
+
 </script>
 {% endblock %}
 
@@ -143,9 +155,23 @@
             <p class="text-primary pp"  onclick="clike({{ comment.id }})">like</p> <p id='cl{{ comment.id }}'>{{ comment.upvote }}</p>
             <p class="text-primary pp" onclick="cdislike({{ comment.id }})">dislike</p> <p id='cd{{ comment.id }}'>{{ comment.downvote }}</p>
             <p  style="float:right" >{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</p>
+            <a href="#" id="delete" onclick="delete_comment()">Delete</a>
         </div>
     </div>
 {% endfor %}
+
+<div class="bg-modal">
+    <div class="inner-modal">
+        <div class="close" onclick="close_email()">+</div>
+        <form name="" action="{{ url_for('delete_comments') }}" method="post">
+            <input type="hidden" id= "txtUrl" name="current_url" value="">
+            <script>  document.getElementById('txtUrl').value = window.location.href; </script>
+            <input type="email" class="trying" id="email" name="erase_comment" placeholder="Enter your email" required="required">
+            <input type="submit" class="trying" id="btnValue" value="confirm">
+        </form>
+
+    </div>
+    </div>
 
 
 {%  endblock %}

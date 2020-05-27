@@ -283,6 +283,31 @@ def comment_downvote(commentID):
         Tool.commentFlag = -1
     return jsonify({'downvote': comment.downvote})
 
+@app.route('/delete_comment', methods=['POST','GET'])
+def delete_comments():
+    email = request.form['erase_comment']
+    nxt_url = request.form['current_url']
+    author_mail = Author.query.filter_by(mail=email).first()
+
+    if not author_mail:
+        flash(f'you are not an author yet, become one by writing a comment', 'danger')
+        return redirect(nxt_url)
+
+    else:
+        comment_id = Comment.query.filter_by(author_id=author_mail.id).first()
+        if not comment_id:
+            flash(f'you did not write up this comment', 'danger')
+            return redirect(nxt_url)
+
+        comment_votes = CommentVote.query.filter_by(comment_id=comment_id.id).first()
+        if comment_votes:
+            db.session.delete(comment_votes)
+
+        db.session.delete(comment_id)
+        db.session.commit()
+        flash(f'comment deleted', 'success')
+        return redirect(nxt_url)
+
 # =========================================================================================
 # check if a email is banned
 # ========================================================================================
