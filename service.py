@@ -301,7 +301,7 @@ def get_subject(subjectID):
     subject = Subject.query.filter_by(id=subjectID).first()
     url = Tool.subject_url(subject)
     page = request.args.get('page', 1, type=int)        #Set the default page to page 1
-    articles = Article.query.filter_by(subject_id=subject.id, status=1).order_by(Article.time.desc()).paginate(page=page, per_page=5)
+    articles = Article.query.filter_by(subject_id=subject.id, status=1).order_by(Article.time.desc()).paginate(page=page, per_page=20)
 
 
     # ==================================================
