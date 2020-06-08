@@ -300,7 +300,9 @@ def check_mail(mail):
 def get_subject(subjectID):
     subject = Subject.query.filter_by(id=subjectID).first()
     url = Tool.subject_url(subject)
-    articles = Article.query.filter_by(subject_id=subject.id, status=1).all()
+    page = request.args.get('page', 1, type=int)        #Set the default page to page 1
+    articles = Article.query.filter_by(subject_id=subject.id, status=1).order_by(Article.time.desc()).paginate(page=page, per_page=20)
+
 
     # ==================================================
     # hot article
@@ -683,9 +685,10 @@ def error(message):
 
 @app.route('/author/<author_id>')
 def author(author_id):
+    author = Author.query.filter_by(id=author_id).first()
     articles = Article.query.order_by(Article.time.desc()).filter_by(author_id=author_id).all()
     comments = Comment.query.order_by(Comment.time.desc()).filter_by(author_id=author_id).all()
-    return render_template('author.html', articles=articles, comments=comments, Tool=Tool)
+    return render_template('author.html', articles=articles, comments=comments, Tool=Tool, author=author)
 
 if __name__ == '__main__':
     app.run(debug=True)

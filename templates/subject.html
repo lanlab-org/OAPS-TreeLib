@@ -83,7 +83,7 @@ Click again, and the sorting direction will be descending (Z to A):-->
     {% endif %}
 
         <!--./hot article end-->
-    {% for article in articles[::-1] %}
+    {% for article in articles.items %}
         <tr>
             <td><a href="/article/{{ article.id }}">{{ article.title }}</a></td>
         <td>{{ Tool.email_display_filter(article.author.mail) }}</td>
@@ -95,6 +95,17 @@ Click again, and the sorting direction will be descending (Z to A):-->
 
     </tbody>
   </table>
+
+  {% for page_num in articles.iter_pages() %}
+    {% if page_num %}
+      {% if articles.page == page_num%}
+        <a class="btn btn-info mb-4" href="{{ url_for('get_subject', subjectID=subject_id, page=page_num)}}">{{ page_num }}</a>
+      {% else %}
+        <a class="btn btn-outline-info mb-4" href="{{ url_for('get_subject', subjectID=subject_id, page=page_num)}}">{{ page_num }}</a>
+      {% endif %}
+    {% endif %}
+{% endfor %}
+
 <script>
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
