@@ -1,0 +1,523 @@
+
+    <html>
+    <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+    <meta charset="utf-8">
+    <style>
+      * {font-family: sans-serif !important;}
+
+      :target {
+	  background-color: #ffa;
+      }
+    </style>
+    </head>
+    <body>
+    <h2 id="matrix">Requirement Traceability Matrix</h2>
+<table border=1>
+<tr><td>REQUIREMENT\TEST</td><td><a href="#T001" title="T001">T001</a></td><td><a href="#T002" title="T002">T002</a></td><td><a href="#T003" title="T003">T003</a></td><td><a href="#T004" title="T004">T004</a></td><td><a href="#T005" title="T005">T005</a></td><td><a href="#T006" title="T006">T006</a></td></tr>
+<tr><td><a href="#RQ01" title="Display authors' email address">RQ01</a></td>
+<td><a title="Test Title: test case for Displaying Author Emails
+
+Test For: RQ01
+
+Description: 
+Displays Author Emails
+
+Rationale: When article information is displayed, correct author email displayed
+
+Input: 
+None.
+
+Expected Output: 
+email of author
+
+Actual Output: 
+As expected.
+
+Diagnosis: 
+Displays correct email as expected
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-01
+
+"><font color="green">PASSED</font></a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr><td><a href="#RQ02" title="Pagination - Display multiple articles in a single page (5 articles)">RQ02</a></td>
+<td></td>
+<td><a title="Test Title: test case for Pagination (5)
+
+Test For: RQ02
+
+Description: 
+Pagination - Display 5 articles in a single page
+
+Rationale: 
+So as to preview multiple articles
+
+Input: 
+
+Expected Output: 
+Displays 5 articles in a single page
+
+Actual Output: 
+5 articles displayed
+
+Diagnosis: 
+Works as expected.
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-02
+
+"><font color="green">PASSED</font></a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr><td><a href="#RQ03" title="Pagination - Display multiple articles in a single page (10 articles)">RQ03</a></td>
+<td></td>
+<td></td>
+<td><a title="Test Title: test case for Pagination (10)
+
+Test For: RQ03
+
+Description: 
+Pagination - Display 10 articles in a single page
+
+Rationale: 
+So as to preview multiple articles
+
+Input: 
+
+Expected Output: 
+Displays 10 articles in a single page
+
+Actual Output: 
+10 articles displayed
+
+Diagnosis: 
+Works as expected.
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-02
+
+"><font color="green">PASSED</font></a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr><td><a href="#RQ04" title="Pagination - Display multiple articles in a single page (20 articles)">RQ04</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td><a title="Test Title: test case for Pagination (20)
+
+Test For: RQ04
+
+Description: 
+Pagination - Display 20 articles in a single page
+
+Rationale: 
+So as to preview multiple articles
+
+Input: 
+
+Expected Output: 
+Displays 20 articles in a single page
+
+Actual Output: 
+20 articles displayed
+
+Diagnosis: 
+Works as expected.
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-02
+
+"><font color="green">PASSED</font></a></td>
+<td></td>
+<td></td>
+</tr>
+<tr><td><a href="#RQ05" title="Delete Comments Feature - Allows authors to delete their own comments">RQ05</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><a title="Test Title: Delete Comments Feature
+
+Test For: RQ05
+
+Description: Allows authors to delete their own comments
+
+Rationale: Incase authors wish to withdraw comments.
+
+Input: Button: [QUOTE]Delete[QUOTE]; Input author email for verification
+
+Expected Output: Comment gets deleted if author email is correct
+
+Actual Output: 
+As expected.
+
+Diagnosis: Verifies author and deletes comment provided that comment belongs to the author
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-03
+
+"><font color="green">PASSED</font></a></td>
+<td></td>
+</tr>
+<tr><td><a href="#RQ06" title="Delete Comments Feature - Do not permit authors to delete other authors' comments">RQ06</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><a title="Test Title: Delete Comments Feature
+
+Test For: RQ06
+
+Description: Do not permit authors to delete other authors[QUOTE] comments
+
+Rationale: No one is able to delete a comment unless it is their own
+
+Input: Button: [QUOTE]Delete[QUOTE]; Input author email for verification
+
+Expected Output: 
+If email does not exist, program displays [QUOTE]Error: you are not an author yet[QUOTE],
+If email belongs to a different author, program displays [QUOTE]Error: You did not post this comment![QUOTE]
+
+Actual Output: 
+As expected.
+
+Diagnosis: Does not allow authors to delete comments they did not post
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-03
+
+"><font color="green">PASSED</font></a></td>
+</tr>
+</table>
+<h2>Requirements</h2>
+<h3 id="RQ01">RQ01</h3>
+Display authors' email address<br/><p><a href="#matrix">Top</a></p>
+<h3 id="RQ02">RQ02</h3>
+Pagination - Display multiple articles in a single page (5 articles)<br/><p><a href="#matrix">Top</a></p>
+<h3 id="RQ03">RQ03</h3>
+Pagination - Display multiple articles in a single page (10 articles)<br/><p><a href="#matrix">Top</a></p>
+<h3 id="RQ04">RQ04</h3>
+Pagination - Display multiple articles in a single page (20 articles)<br/><p><a href="#matrix">Top</a></p>
+<h3 id="RQ05">RQ05</h3>
+Delete Comments Feature - Allows authors to delete their own comments<br/><p><a href="#matrix">Top</a></p>
+<h3 id="RQ06">RQ06</h3>
+Delete Comments Feature - Do not permit authors to delete other authors' comments<br/><p><a href="#matrix">Top</a></p>
+<h2>Test cases</h2>
+<h3 id="T001">T001</h3>
+<table>
+<tr>
+<td>Test Title:</td><td>test case for Displaying Author Emails<br/></td>
+</tr>
+<tr>
+<td>Test For:</td><td>RQ01<br/></td>
+</tr>
+<tr>
+<td>Description:</td><td>Displays Author Emails<br/></td>
+</tr>
+<tr>
+<td>Rationale:</td><td>When article information is displayed, correct author email displayed<br/></td>
+</tr>
+<tr>
+<td>Input:</td><td>None.<br/></td>
+</tr>
+<tr>
+<td>Expected Output:</td><td>email of author<br/></td>
+</tr>
+<tr>
+<td>Actual Output:</td><td>As expected.<br/></td>
+</tr>
+<tr>
+<td>Diagnosis:</td><td>Displays correct email as expected<br/></td>
+</tr>
+<tr>
+<td>Status:</td><td>P<br/></td>
+</tr>
+<tr>
+<td>Signature:</td><td>Jes<br/></td>
+</tr>
+<tr>
+<td>Date:</td><td>2020-06-01<br/></td>
+</tr>
+</table>
+<p><a href="#matrix">Top</a></p>
+<h3 id="T002">T002</h3>
+<table>
+<tr>
+<td>Test Title:</td><td>test case for Pagination (5)<br/></td>
+</tr>
+<tr>
+<td>Test For:</td><td>RQ02<br/></td>
+</tr>
+<tr>
+<td>Description:</td><td>Pagination - Display 5 articles in a single page<br/></td>
+</tr>
+<tr>
+<td>Rationale:</td><td>So as to preview multiple articles<br/></td>
+</tr>
+<tr>
+<td>Input:</td><td><br/></td>
+</tr>
+<tr>
+<td>Expected Output:</td><td>Displays 5 articles in a single page<br/></td>
+</tr>
+<tr>
+<td>Actual Output:</td><td>5 articles displayed<br/></td>
+</tr>
+<tr>
+<td>Diagnosis:</td><td>Works as expected.<br/></td>
+</tr>
+<tr>
+<td>Status:</td><td>P<br/></td>
+</tr>
+<tr>
+<td>Signature:</td><td>Jes<br/></td>
+</tr>
+<tr>
+<td>Date:</td><td>2020-06-02<br/></td>
+</tr>
+</table>
+<p><a href="#matrix">Top</a></p>
+<h3 id="T003">T003</h3>
+<table>
+<tr>
+<td>Test Title:</td><td>test case for Pagination (10)<br/></td>
+</tr>
+<tr>
+<td>Test For:</td><td>RQ03<br/></td>
+</tr>
+<tr>
+<td>Description:</td><td>Pagination - Display 10 articles in a single page<br/></td>
+</tr>
+<tr>
+<td>Rationale:</td><td>So as to preview multiple articles<br/></td>
+</tr>
+<tr>
+<td>Input:</td><td><br/></td>
+</tr>
+<tr>
+<td>Expected Output:</td><td>Displays 10 articles in a single page<br/></td>
+</tr>
+<tr>
+<td>Actual Output:</td><td>10 articles displayed<br/></td>
+</tr>
+<tr>
+<td>Diagnosis:</td><td>Works as expected.<br/></td>
+</tr>
+<tr>
+<td>Status:</td><td>P<br/></td>
+</tr>
+<tr>
+<td>Signature:</td><td>Jes<br/></td>
+</tr>
+<tr>
+<td>Date:</td><td>2020-06-02<br/></td>
+</tr>
+</table>
+<p><a href="#matrix">Top</a></p>
+<h3 id="T004">T004</h3>
+<table>
+<tr>
+<td>Test Title:</td><td>test case for Pagination (20)<br/></td>
+</tr>
+<tr>
+<td>Test For:</td><td>RQ04<br/></td>
+</tr>
+<tr>
+<td>Description:</td><td>Pagination - Display 20 articles in a single page<br/></td>
+</tr>
+<tr>
+<td>Rationale:</td><td>So as to preview multiple articles<br/></td>
+</tr>
+<tr>
+<td>Input:</td><td><br/></td>
+</tr>
+<tr>
+<td>Expected Output:</td><td>Displays 20 articles in a single page<br/></td>
+</tr>
+<tr>
+<td>Actual Output:</td><td>20 articles displayed<br/></td>
+</tr>
+<tr>
+<td>Diagnosis:</td><td>Works as expected.<br/></td>
+</tr>
+<tr>
+<td>Status:</td><td>P<br/></td>
+</tr>
+<tr>
+<td>Signature:</td><td>Jes<br/></td>
+</tr>
+<tr>
+<td>Date:</td><td>2020-06-02<br/></td>
+</tr>
+</table>
+<p><a href="#matrix">Top</a></p>
+<h3 id="T005">T005</h3>
+<table>
+<tr>
+<td>Test Title:</td><td>Delete Comments Feature<br/></td>
+</tr>
+<tr>
+<td>Test For:</td><td>RQ05<br/></td>
+</tr>
+<tr>
+<td>Description:</td><td>Allows authors to delete their own comments<br/></td>
+</tr>
+<tr>
+<td>Rationale:</td><td>Incase authors wish to withdraw comments.<br/></td>
+</tr>
+<tr>
+<td>Input:</td><td>Button: "Delete"; Input author email for verification<br/></td>
+</tr>
+<tr>
+<td>Expected Output:</td><td>Comment gets deleted if author email is correct<br/></td>
+</tr>
+<tr>
+<td>Actual Output:</td><td>As expected.<br/></td>
+</tr>
+<tr>
+<td>Diagnosis:</td><td>Verifies author and deletes comment provided that comment belongs to the author<br/></td>
+</tr>
+<tr>
+<td>Status:</td><td>P<br/></td>
+</tr>
+<tr>
+<td>Signature:</td><td>Jes<br/></td>
+</tr>
+<tr>
+<td>Date:</td><td>2020-06-03<br/></td>
+</tr>
+</table>
+<p><a href="#matrix">Top</a></p>
+<h3 id="T006">T006</h3>
+<table>
+<tr>
+<td>Test Title:</td><td>Delete Comments Feature<br/></td>
+</tr>
+<tr>
+<td>Test For:</td><td>RQ06<br/></td>
+</tr>
+<tr>
+<td>Description:</td><td>Do not permit authors to delete other authors' comments<br/></td>
+</tr>
+<tr>
+<td>Rationale:</td><td>No one is able to delete a comment unless it is their own<br/></td>
+</tr>
+<tr>
+<td>Input:</td><td>Button: "Delete"; Input author email for verification<br/></td>
+</tr>
+<tr>
+<td>Expected Output:</td><td>If email does not exist, program displays "Error: you are not an author yet",<br/>If email belongs to a different author, program displays "Error: You did not post this comment!"<br/></td>
+</tr>
+<tr>
+<td>Actual Output:</td><td>As expected.<br/></td>
+</tr>
+<tr>
+<td>Diagnosis:</td><td>Does not allow authors to delete comments they did not post<br/></td>
+</tr>
+<tr>
+<td>Status:</td><td>P<br/></td>
+</tr>
+<tr>
+<td>Signature:</td><td>Jes<br/></td>
+</tr>
+<tr>
+<td>Date:</td><td>2020-06-03<br/></td>
+</tr>
+</table>
+<p><a href="#matrix">Top</a></p>
+
+<script>
+    function showDiv() {
+       document.getElementById('TemplateInformation').style.display = "block";
+    }
+</script>
+
+<input type="button" value="Show format for srs.txt and test.txt" onclick="showDiv()" />
+
+<div id="TemplateInformation"  style="display:none;" >
+
+<pre>
+=====================
+Template for srs.txt
+=====================
+
+@RQ01
+
+This is my great requirement.
+
+
+=====================
+Template for test.txt
+=====================
+
+@T001
+
+Test title: test case for requirement 1
+
+Test for: RQ01
+
+Description: None.
+
+Rationale: None.
+
+Input:
+
+Something.
+
+Expected output:
+
+Something else.
+
+Actual output:
+
+As expected.
+
+Diagnosis:
+
+Status: F
+
+Signature: Hui
+
+Date: 2020-03-28
+
+</pre>
+</div>
+
+<p><i>
+    This test report was generated by RTM.py on
+       <script>
+            document.write(document.lastModified);
+       </script>
+    </i></p><p><i>Copyright (C) 2020 Lan Laboratory [lanhui@zjnu.edu.cn]</i></p></body>
+</html>
