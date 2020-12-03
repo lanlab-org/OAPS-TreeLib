@@ -1,0 +1,24 @@
+@RQ01
+
+Display authors' email address
+
+@RQ02
+
+Pagination - Display multiple articles in a single page (5 articles)
+
+
+@RQ03
+
+Pagination - Display multiple articles in a single page (10 articles)
+
+@RQ04
+
+Pagination - Display multiple articles in a single page (20 articles)
+
+@RQ05
+
+Delete Comments Feature - Allows authors to delete their own comments
+
+@RQ06
+
+Delete Comments Feature - Do not permit authors to delete other authors' comments

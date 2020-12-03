@@ -1,0 +1,188 @@
+@T001
+
+Test title: test case for Displaying Author Emails
+
+Test for: RQ01
+
+Description:
+Displays Author Emails
+
+Rationale: When article information is displayed, correct author email displayed
+
+Input:
+
+None.
+
+Expected output:
+
+email of author
+
+Actual output:
+
+As expected.
+
+Diagnosis:
+Displays correct email as expected
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-01
+
+#################
+
+
+
+@T002
+
+Test title: test case for Pagination (5)
+
+Test for: RQ02
+
+Description:
+Pagination - Display 5 articles in a single page
+
+Rationale:
+So as to preview multiple articles
+
+Input:
+
+Expected output:
+Displays 5 articles in a single page
+
+Actual output:
+5 articles displayed
+
+Diagnosis:
+Works as expected.
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-02
+
+
+
+@T003
+
+Test title: test case for Pagination (10)
+
+Test for: RQ03
+
+Description:
+Pagination - Display 10 articles in a single page
+
+Rationale:
+So as to preview multiple articles
+
+Input:
+
+Expected output:
+Displays 10 articles in a single page
+
+Actual output:
+10 articles displayed
+
+Diagnosis:
+Works as expected.
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-02
+
+
+
+@T004
+
+Test title: test case for Pagination (20)
+
+Test for: RQ04
+
+Description:
+Pagination - Display 20 articles in a single page
+
+Rationale:
+So as to preview multiple articles
+
+Input:
+
+Expected output:
+Displays 20 articles in a single page
+
+Actual output:
+20 articles displayed
+
+Diagnosis:
+Works as expected.
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-02
+
+
+
+@T005
+
+Test title: Delete Comments Feature
+
+Test for: RQ05
+
+Description: Allows authors to delete their own comments
+
+Rationale: Incase authors wish to withdraw comments.
+
+Input: Button: "Delete"; Input author email for verification
+
+Status: P
+
+Expected output: Comment gets deleted if author email is correct
+
+Actual output:
+
+As expected.
+
+Diagnosis: Verifies author and deletes comment provided that comment belongs to the author
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-03
+
+
+
+@T006
+
+Test title: Delete Comments Feature
+
+Test for: RQ06
+
+Description: Do not permit authors to delete other authors' comments
+
+Rationale: No one is able to delete a comment unless it is their own
+
+Input: Button: "Delete"; Input author email for verification
+
+Status: P
+
+Expected output:
+If email does not exist, program displays "Error: you are not an author yet",
+If email belongs to a different author, program displays "Error: You did not post this comment!"
+
+Actual output:
+
+As expected.
+
+Diagnosis: Does not allow authors to delete comments they did not post
+
+Status: P
+
+Signature: Jes
+
+Date: 2020-06-03
