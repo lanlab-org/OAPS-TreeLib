@@ -53,6 +53,7 @@ class Article(db.Model):
     status = db.Column(db.Integer, default=1)
     # OneToMany
     comments = db.relationship('Comment', backref='article', cascade='all,delete-orphan')
+    reports = db.relationship('Report', backref='article', cascade='all,delete-orphan')
 
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -64,6 +65,12 @@ class Comment(db.Model):
     downvote = db.Column(db.Integer)
     time = db.Column(db.DateTime)
 
+class Report(db.Model):
+    __tablename__ = 'reports'
+    id = db.Column(db.Integer, primary_key=True)
+    article_id = db.Column(db.Integer, db.ForeignKey('articles.id'))
+    article_title = db.Column(db.Text)
+    time = db.Column(db.DateTime)
 
 # ------------------------------------------------------#
 #              record every visitor's ip               #
@@ -532,6 +539,24 @@ def download_file(filename):
 def preview_file(filename):
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename)
 
+# ===========================================================================
+# post report
+# ===========================================================================
+@app.route("/post_report/<articleID>", methods=['POST', 'GET'])
+def post_report(articleID):
+    if Tool.check_short_time() == 'pivot':
+        message = 'You have posted too many reports repeatedlly, please don\'t spam!'
+        return render_template('error.html', message=message)
+
+    time = datetime.now()
+    articletitle = Article.query.filter_by(id=articleID).first().title
+    report = Report(article_id=articleID, article_title=articletitle,time=time)
+    db.session.add(report)
+    article = Article.query.filter_by(id=articleID).first()
+    article.metric = Tool.calculate_metric(article)
+    return redirect(url_for('get_article', articleID=articleID))
+
+
 # ======================================================================
 # post comment
 # ======================================================================
@@ -590,7 +615,8 @@ def admin():
     else:
         articles = Article.query.all()
         comments = Comment.query.all()
-        return render_template('admin.html',articles=articles,comments=comments)
+        reports = Report.query.all()
+        return render_template('admin.html',articles=articles,comments=comments,reports=reports)
 
 @app.route("/logout")
 def logout():
@@ -615,6 +641,23 @@ def delete_comment(id):
         return redirect('/admin')
     except:
         return 'Error deleting comment!.'
+
+
+@app.route('/deleter/<int:id>')
+def delete_report(id):
+    # delete the comment and its relating records from the database.
+    report = Report.query.filter_by(id=id).first()
+
+    try:
+        # delete the comment
+        if report:
+            db.session.delete(report)
+            db.session.commit()
+        return redirect('/admin')
+    except:
+        return 'Responded report!.'
+
+
 @app.route('/deletea/<int:id>')
 def delete_article(id):
         #to delete an article, we have to consider deleting all its relating values
@@ -691,6 +734,7 @@ def author(author_id):
     return render_template('author.html', articles=articles, comments=comments, Tool=Tool, author=author)
 
 if __name__ == '__main__':
+    db.create_all()
     app.run(debug=True)
 
 

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "template.html" %}
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+</head>
+
+<body>
+{% block content %}
+    {% if session['logged_in'] %}
+    <table id="articles" border="1" align="center" style="width: 70%; margin-top:30px;">
+            <h2 style="margin-top:30px;" align="center">Articles</h2>
+            {% for article in articles %}
+        <tr>
+            <td class="text" align="center" bgcolor="#E5E4E2">
+                    <a href="/article/{{ article.id }}">{{ article.title }}</a>
+            </td>
+            <td>
+                <a style="float:left; margin-left: 20px; margin-top: 10px; margin-bottom: 10px;" href="/deletea/{{article.id}}"><button class="btn btn-primary">Delete</button></a>
+                <a style="float:right; margin-right: 20px; margin-top: 10px; margin-bottom: 10px;" href="/article_is_hidden/{{ article.id }}"><button class="btn btn-primary">Hide/Show</button></a>
+            </td>
+            {% if article.status == 0 %}
+            <td style="color: #306eff;" bgcolor="#E5E4E2" align="center">Hidden</td>
+            {% elif article.status == 1 %}
+            <td style="color: #306eff;" bgcolor="#E5E4E2" align="center">Available</td>
+            {% endif %}
+        </tr>
+            {% endfor %}
+    </table>
+        
+
+        
+    <table id="comments" border="1" align="center" style="width: 70%; margin-top:30px;">
+            <h2 style="margin-top:30px;" align="center">comments</h2>
+            {% for comment in comments %}
+        <tr>
+            <td bgcolor="#E5E4E2" align="center">
+                    <a href="/article/{{ comment.body }}">{{ comment.body }}</a>
+            </td>
+            <td>
+                <a href="/deletec/{{comment.id}}"><button style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-primary">Delete</button></a>
+
+            </td>
+        </tr>
+            {% endfor %}
+    </table>
+
+    <table id="reports" border="1" align="center" style="width: 70%; margin-top:30px;">
+            <h2 style="margin-top:30px;" align="center">reports</h2>
+            {% for report in reports %}
+        <tr>
+            <td bgcolor="#E5E4E2" align="center">
+                    <a href="/article/{{ report.article_title }}">{{ report.article_id }}</a>
+            </td>
+            <td>
+                <a href="/deleter/{{report.id}}"><button style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-primary">Delete Report</button></a>
+                <a href="/deletea/{{comment.id}}"><button style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-primary">Delete Article</button></a>
+            </td>
+        </tr>
+            {% endfor %}
+    </table>
+    
+</br>
+</br>
+</br>
+</br>
+</br>
+    <a href="/logout"><button style="padding:12px 18px 12px;" class="btn btn-primary btn-lg">logout</button></a>
+    {% endif %}
+
+{% endblock %}
+</body>
+</html>
