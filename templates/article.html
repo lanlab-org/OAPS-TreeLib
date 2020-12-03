@@ -102,7 +102,10 @@
     <div>
         <p class="text-primary pp" onclick="like()">like</p>  <p id="like">{{ article.upvote }}</p>&nbsp;
 
-        <p class="text-primary pp" onclick="dislike()">dislike</p> <p id="dislike">{{ article.downvote }}</p>&nbsp;<br>
+        <p class="text-primary pp" onclick="dislike()">dislike</p> <p id="dislike">{{ article.downvote }}</p>&nbsp;
+
+        <!--New number of visitors-->
+        <p class="text-primary">visit</p> <p id="visit">{{ article.visit }}</p> <br>
 
 
         <a href="{{ url_for('download_file', filename=article.fpath) }}"><button class="btn btn-primary" style="float:right" >download pdf</button></a><!--pdf download link-->
