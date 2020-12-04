@@ -58,6 +58,7 @@ Click again, and the sorting direction will be descending (Z to A):-->
         <br><div class="card">
     <div class="card-body">
       <p class="card-text">You are in {{ url }}</p>
+<<<<<<< HEAD
         <form name="myform" method="get" onsubmit="return verify();">
             <input type="text" name="subject_id" style="display: none" value={{ subject_id }}><br>
         <button type="submit" class="btn btn-primary" onclick="postArticle()">post article</button>
@@ -65,6 +66,15 @@ Click again, and the sorting direction will be descending (Z to A):-->
         <button type="submit" class="btn btn-primary" onclick="createSubject()">add subcategory</button>
         <input type="checkbox" name="add_father" value="father" /> add main subject
             {% endif %}
+=======
+        <a href="{{lasturl}}">返回上一级</a>
+        <form name="myform" method="get" onsubmit="return verify();">
+            <input type="text" name="subject_id" style="display: none" value={{ subject_id }}>
+            <input type="email" name="email" id="email" placeholder="Enter Email to post or create" required="required"/><br><br>
+        <button type="submit" class="btn btn-primary" onclick="postArticle()">post article</button>
+        <button type="submit" class="btn btn-primary" onclick="createSubject()">add subcategory</button>
+        <input type="checkbox" name="add_father" value="father" /> add main subject
+>>>>>>> 4c444f8 (第一次提交)
         </form>
     </div>
   </div><br>
