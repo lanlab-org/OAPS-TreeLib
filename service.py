@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 import os, uuid ,math, random
 from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory
 from werkzeug.utils import secure_filename
@@ -200,6 +200,23 @@ class Tool:
 
         return display + suf
 
+    # add @return a list of top articles
+    @staticmethod
+    def get_top_articles():
+        times = 50
+        articles = []
+        lens = db.session.query(func.count(Subject.id)).scalar()
+        while (times > 0):
+            subjectId = random.randint(1, lens)
+            article = Article.query.filter(Article.metric > 0, Article.subject_id == subjectId).limit(1)
+            articles.extend(article)
+            if len(articles) >= 3:
+                break
+            times -= 1
+        articles = list(set(articles))
+        return articles
+    # end
+
 # =========================================================================================
 # like and dislike
 # ========================================================================================
@@ -357,7 +374,7 @@ def before_request():
 # ============================================================================================#
 @app.route('/')
 def index():
-    return render_template('io.html')
+    return render_template('io.html', popular_articles=Tool.get_top_articles())
 
 @app.route('/test')
 def test_one():
@@ -383,6 +400,13 @@ def create_index():
     subjects = Subject.query.filter_by(pid='None').all()
     out.write('{% extends "template.html" %}' + '\n')
     out.write('{% block content %}' + '\n')
+    # add
+    out.write('<div>\n <br>\n <table class="table table-hover table-striped">\n')
+    out.write(' <tr> <td>Top Articles:</td> </tr>\n')
+    out.write('{% for article in popular_articles %}\n')
+    out.write('<tr><td><a href="/article/{{ article.id }}">Article Name: {{ article.title }}</a></td></tr>\n')
+    out.write('{% endfor %}\n </table>\n <br>\n </div>\n')
+    # end
     for subject in subjects:
         find_subjects(subject, 0)
         print('\n')
@@ -390,15 +414,13 @@ def create_index():
     out.write('{%  endblock  %}' + '\n')
     out.flush()
     out.close()
-    return render_template('io.html')
+    return render_template('io.html', popular_articles=Tool.get_top_articles())
 
 # ================================================================================
 # Edit and add subject
 # ================================================================================
 @app.route('/edit_subcategory', methods=['GET', 'POST'])
 def add_sub_category():
-    if not session.get('logged_in'):
-        return render_template('login.html')
     if request.method == 'POST':
         subject_id = request.form['subject_id']
         subject_name = request.form['subject_name']
