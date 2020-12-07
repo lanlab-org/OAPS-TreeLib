@@ -59,11 +59,12 @@ Click again, and the sorting direction will be descending (Z to A):-->
     <div class="card-body">
       <p class="card-text">You are in {{ url }}</p>
         <form name="myform" method="get" onsubmit="return verify();">
-            <input type="text" name="subject_id" style="display: none" value={{ subject_id }}>
-            <input type="email" name="email" id="email" placeholder="Enter Email to post or create" required="required"/><br><br>
+            <input type="text" name="subject_id" style="display: none" value={{ subject_id }}><br>
         <button type="submit" class="btn btn-primary" onclick="postArticle()">post article</button>
+            {% if session.get('logged_in') %}
         <button type="submit" class="btn btn-primary" onclick="createSubject()">add subcategory</button>
         <input type="checkbox" name="add_father" value="father" /> add main subject
+            {% endif %}
         </form>
     </div>
   </div><br>
