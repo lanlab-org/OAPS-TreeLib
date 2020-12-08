@@ -108,6 +108,53 @@ Click again, and the sorting direction will be descending (Z to A):-->
 {% endfor %}
 
 <script>
+var dir = "asc"
+function sortTable(n) {
+  //alert("sweet texts".localeCompare("physical sciences cook book"));
+  var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
+  table = document.getElementById("myTable");
+  rows = table.rows;
+  for(i = 1;i < (rows.length - 1);i++){
+    for(j = (rows.length - 1);j >= i+1;j--){
+        shouldSwitch = false;
+        x = rows[j].getElementsByTagName("TD")[n];
+        y = rows[j - 1].getElementsByTagName("TD")[n];
+        if(n==3){
+            if (dir == "asc") {
+                if (parseFloat(x.innerText) > parseFloat(y.innerText)) {
+                  shouldSwitch = true;
+                }
+            } else if (dir == "desc") {
+                if (parseFloat(x.innerText) < parseFloat(y.innerText)) {
+                  shouldSwitch = true;
+                }
+            }
+        }else {
+            if (dir == "asc") {
+                if (x.innerText.toLowerCase().localeCompare(y.innerText.toLowerCase()) == 1) {
+                  shouldSwitch = true;
+                }
+            } else if (dir == "desc") {
+                if (x.innerText.toLowerCase().localeCompare(y.innerText.toLowerCase()) == -1) {
+                  shouldSwitch = true;
+                }
+            }
+        }
+        if (shouldSwitch) {
+          rows[j].parentNode.insertBefore(rows[j], rows[j - 1]);
+          shouldSwitch = false;
+        }
+    }
+  }
+  if(dir == "desc"){
+    dir="asc";
+  }else{
+    dir="desc";
+  }
+}
+</script>
+
+
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("myTable");
