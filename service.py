@@ -51,6 +51,8 @@ class Article(db.Model):
     metric = db.Column(db.Float, default=0)
     fpath = db.Column(db.String)
     status = db.Column(db.Integer, default=1)
+    # Add downloads
+    downloadcount = db.Column(db.Integer)
     # OneToMany
     comments = db.relationship('Comment', backref='article', cascade='all,delete-orphan')
 
@@ -524,8 +526,11 @@ def allowed_file(filename):
 # ===========================================================================
 # download pdf file
 # ===========================================================================
-@app.route("/download/<filename>", methods=['GET'])
-def download_file(filename):
+@app.route("/download/<filename>/<id>", methods=['GET'])
+def download_file(filename, id):
+    article = Article.query.get(id)
+    article.downloadcount += 1
+    db.session.add(article)
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
 # ===========================================================================
 # preview pdf file
