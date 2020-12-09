@@ -679,7 +679,11 @@ def search():
     articles = a
     comments = c
     
-    return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message)
+    content1 = content.upper()
+    content2 = content.lower()
+    content3 = content.capitalize()
+    
+    return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message,kwd=content,kwd1=content1,kwd2=content2,kwd3=content3)
 
 @app.route('/error/<message>')
 def error(message):
