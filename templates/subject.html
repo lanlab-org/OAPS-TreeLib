@@ -46,10 +46,10 @@
           <!-- Click "Title" to sort by names, and "population" to sort by country.
 The first time you click, the sorting direction is ascending (A to Z).
 Click again, and the sorting direction will be descending (Z to A):-->
-        <th style=" cursor: pointer;" onclick="sortTable(0) "><button class="btn btn-primary">Title</button></th>
+        <th style=" cursor: pointer;" onClick="sortTable(0) "><button class="btn btn-primary">Title</button></th>
         <th>author</th>
         <th>time</th>
-          <th style=" cursor: pointer;" onclick="sortTable(3) "><button class="btn btn-primary">population</button></th>
+          <th style=" cursor: pointer;" onClick="sortTable(3) "><button class="btn btn-primary">population</button></th>
 
       </tr>
     </thead>
@@ -58,13 +58,13 @@ Click again, and the sorting direction will be descending (Z to A):-->
         <br><div class="card">
     <div class="card-body">
       <p class="card-text">You are in {{ url }}</p>
-        <form name="myform" method="get" onsubmit="return verify();">
-            <input type="text" name="subject_id" style="display: none" value={{ subject_id }}><br>
-        <button type="submit" class="btn btn-primary" onclick="postArticle()">post article</button>
-            {% if session.get('logged_in') %}
-        <button type="submit" class="btn btn-primary" onclick="createSubject()">add subcategory</button>
+        <a href="{{lasturl}}">返回上一级</a>
+        <form name="myform" method="get" onSubmit="return verify();">
+            <input type="text" name="subject_id" style="display: none" value={{ subject_id }}>
+            <input type="email" name="email" id="email" placeholder="Enter Email to post or create" required/><br><br>
+        <button type="submit" class="btn btn-primary" onClick="postArticle()">post article</button>
+        <button type="submit" class="btn btn-primary" onClick="createSubject()">add subcategory</button>
         <input type="checkbox" name="add_father" value="father" /> add main subject
-            {% endif %}
         </form>
     </div>
   </div><br>
