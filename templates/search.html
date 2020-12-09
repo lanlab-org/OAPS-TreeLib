@@ -45,7 +45,7 @@
         {% for comment in comments %}
         <tr>
             <td><a href="/article/{{ comment.article_id }}">{{ comment.article.title }}</a></td>
-            <td>{{ Tool.sensitive_words_filter(comment.body) }}</td>
+{#            <td>{{ Tool.sensitive_words_filter(comment.body) }}</td>#}
             <td>{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</td>
             <td><a href="/author/{{ comment.author_id }}">{{ Tool.email_display_filter(comment.author.mail) }}</a></td>
         </tr>

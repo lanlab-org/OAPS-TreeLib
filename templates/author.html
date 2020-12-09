@@ -78,7 +78,7 @@
     {% for comment in comments %}
       <tr>
           <td><a href="/article/{{ comment.article.id }}">{{ comment.article.title }}</a></td>
-          <td>{{ Tool.sensitive_words_filter(comment.body) }}</td>
+{#          <td>{{ Tool.sensitive_words_filter(comment.body) }}</td>#}
         <td>{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</td>
         <td>{{ comment.upvote }}</td>
               <td>{{ comment.downvote }}</td>

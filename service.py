@@ -1,3 +1,5 @@
+import sqlite3
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os, uuid ,math, random
@@ -5,6 +7,7 @@ from flask import Flask, flash, request, redirect, url_for, session, jsonify, re
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
+from werkzeug.security import generate_password_hash,check_password_hash
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = basedir + '\static\pdf'
 ALLOWED_EXTENSIONS = set(['pdf'])
@@ -150,21 +153,21 @@ class Tool:
     # @param some text
     # @return some text without sensitive words
     # ======================================================================================================
-    @staticmethod
-    def sensitive_words_filter(text):
-        f = open('static/sensitive words/1.txt', 'r')
-        result = ''
-        flag = True
-        for line in f:
-            if line.strip() in text.split():
-                flag = False
-                result = text.replace(line.strip(), '**')
-                text = result
-        f.close()
-        if flag:
-            return text
-        else:
-            return result
+    # @staticmethod
+    # def sensitive_words_filter(text):
+    #     f = open('static/sensitive words/1.txt', 'r')
+    #     result = ''
+    #     flag = True
+    #     for line in f:
+    #         if line.strip() in text.split():
+    #             flag = False
+    #             result = text.replace(line.strip(), '**')
+    #             text = result
+    #     f.close()
+    #     if flag:
+    #         return text
+    #     else:
+    #         return result
 
     @staticmethod
     def check_short_time():
@@ -199,6 +202,16 @@ class Tool:
             display += '*'
 
         return display + suf
+
+    # 哈希加盐的密码加密方法
+    def enPassWord(password):  # 将明密码转化为hash码
+        return generate_password_hash(password)  # 返回转换的hash码
+
+    def checkPassWord(enpassword, password):  # 第一参数是从数据查询出来的hash值，第二参数是需要检验的密码
+        return check_password_hash(enpassword, password)  # 如果匹配返回true
+
+
+
 
 # =========================================================================================
 # like and dislike
@@ -567,6 +580,27 @@ def post_comment(articleID):
 def donaton():
     return render_template('donation.html')
 
+
+def checkPassword(email, db_file):
+    sql = "select password from admins where email ='%s'" % (email)
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    return str(result)[3:69]  # 返回hash码
+
+def isNameExisted(email,db_file):
+    sql = "select * from admins where email ='%s'" % (email)
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    if (len(result) == 0):
+        return False
+    else:
+        return True
+
+
 @app.route('/login',methods=['POST','GET'])
 def login_verfaication():
     #admins login verification function
@@ -574,16 +608,22 @@ def login_verfaication():
     email = request.form['email']
     password = request.form['pass']
     #check if it's exists in the database.
-    validate = db.session.query(Admin).filter_by(email=email,password=password).first()
-
-    #allow access
-    if validate:
-        session['logged_in'] = True
-        return redirect('/admin')
-    else:
-        #handle error
+    # validate = db.session.query(Admin).filter_by(email=email,password=password).first()
+    if isNameExisted(email,'database.sqlite'):
+        t = checkPassword(email,'database.sqlite');  # 获得数据库存储的hash值
+        if check_password_hash(t, password):  # 查询有没有这个用户
+            session['logged_in'] = True
+            return redirect('/admin')
+    else:  #
         error = 'invalid username or password!'
-        return render_template('login.html',error = error)
+        return render_template('login.html', error=error)
+    #allow access
+    # if validate:
+    #     session['logged_in'] = True
+    #
+    # else:
+    #     #handle error
+
 
 @app.route('/admin')
 def admin():
@@ -693,7 +733,7 @@ def author(author_id):
     return render_template('author.html', articles=articles, comments=comments, Tool=Tool, author=author)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8080, threaded=True)
 
 
 

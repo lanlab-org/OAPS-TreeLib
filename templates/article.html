@@ -87,7 +87,7 @@
 
     <h2 class="card-title">{{ article.title }}</h2><!--title-->
 
-    <p class="card-text bp" >-abstract<br></p><p>&nbsp;{{ Tool.sensitive_words_filter(article.abstract) }}</p><br><br><!--abstract-->
+{#    <p class="card-text bp" >-abstract<br></p><p>&nbsp;{{ Tool.sensitive_words_filter(article.abstract) }}</p><br><br><!--abstract-->#}
 
     <p class="card-text bp">-hightlights<br></p><p>&nbsp;{{ article.highlight }}</p><br><br><!--highlights-->
 
@@ -145,7 +145,7 @@
     <div class="card">
         <div class="card-body">
             <p><a href="/author/{{ comment.author.id }}">{{ Tool.email_display_filter(comment.author.mail) }}</a></p><br>
-            <p>{{ Tool.sensitive_words_filter(comment.body) }}</p><br>
+{#            <p>{{ Tool.sensitive_words_filter(comment.body) }}</p><br>#}
             <p class="text-primary pp"  onclick="clike({{ comment.id }})">like</p> <p id='cl{{ comment.id }}'>{{ comment.upvote }}</p>
             <p class="text-primary pp" onclick="cdislike({{ comment.id }})">dislike</p> <p id='cd{{ comment.id }}'>{{ comment.downvote }}</p>
             <p  style="float:right" >{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</p>
