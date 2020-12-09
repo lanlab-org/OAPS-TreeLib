@@ -1,24 +1,29 @@
+from numba import jit
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
-import os, uuid ,math, random
+import os, uuid, math, random
 from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
+from tkinter import messagebox
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = basedir + '\static\pdf'
 ALLOWED_EXTENSIONS = set(['pdf'])
 threshold = 100000
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
-app.config['UPLOAD_FOLDER'] = os.path.join(basedir+'\static\pdf')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir+'\database.sqlite')
+app.config['UPLOAD_FOLDER'] = os.path.join(basedir + '\static\pdf')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir + '\database.sqlite')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
 db = SQLAlchemy(app)
 IP = '168.0.0.10'
+
+
 class Author(db.Model):
     __tablename__ = 'authors'
     id = db.Column(db.Integer, primary_key=True)
@@ -28,6 +33,7 @@ class Author(db.Model):
     articles = db.relationship('Article', backref='author')
     comments = db.relationship('Comment', backref='author')
 
+
 class Subject(db.Model):
     __tablename__ = 'subjects'
     id = db.Column(db.Integer, primary_key=True)
@@ -35,6 +41,7 @@ class Subject(db.Model):
     pid = db.Column(db.Integer)
     # OneToMany
     articles = db.relationship('Article', backref='subject')
+
 
 class Article(db.Model):
     __tablename__ = 'articles'
@@ -53,6 +60,7 @@ class Article(db.Model):
     status = db.Column(db.Integer, default=1)
     # OneToMany
     comments = db.relationship('Comment', backref='article', cascade='all,delete-orphan')
+
 
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -78,6 +86,7 @@ class Visitor(db.Model):
     comment_votes = db.relationship('CommentVote', backref='visitor')
     visit_votes = db.relationship('VisitVote', backref='visitor')
 
+
 class ArticleVote(db.Model):
     __tablename__ = 'article_votes'
     id = db.Column(db.Integer, primary_key=True)
@@ -91,16 +100,19 @@ class CommentVote(db.Model):
     visitor_id = db.Column(db.Integer, db.ForeignKey('visitors.id'))
     comment_id = db.Column(db.Integer)
 
+
 class VisitVote(db.Model):
     _tablename__ = 'visit_votes'
     id = db.Column(db.Integer, primary_key=True)
     visitor_id = db.Column(db.Integer, db.ForeignKey('visitors.id'))
     article_id = db.Column(db.Integer)
 
+
 class SensitiveWord(db.Model):
     __tablename__ = 'sensitive_words'
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String(50))
+
 
 class Admin(db.Model):
     def __init__(self, username, password):
@@ -111,15 +123,18 @@ class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(50), nullable=False)
+
+
 # ==============================================================================================
 # Tool class include some usual methods
 # ==============================================================================================
 class Tool:
     commentFlag = 0
     articleFlag = 0
+
     @staticmethod
     def find(subject):
-        if(subject.pid=='None'):
+        if (subject.pid == 'None'):
             print(subject.id)
         else:
             subject = Subject.query.filter_by(id=subject.pid).first()
@@ -200,6 +215,7 @@ class Tool:
 
         return display + suf
 
+
 # =========================================================================================
 # like and dislike
 # ========================================================================================
@@ -223,6 +239,7 @@ def article_upvote(articleID):
         db.session.delete(articlevote)
     return jsonify({'upvote': article.upvote})
 
+
 @app.route('/article_downvote/<articleID>')
 def article_downvote(articleID):
     # get goal article
@@ -244,6 +261,7 @@ def article_downvote(articleID):
         Tool.articleFlag = -1
     return jsonify({'downvote': article.downvote})
 
+
 @app.route('/comment_upvote/<commentID>')
 def comment_upvote(commentID):
     # get goal comment
@@ -262,6 +280,7 @@ def comment_upvote(commentID):
         db.session.delete(commentvote)
     return jsonify({'upvote': comment.upvote})
 
+
 @app.route('/comment_downvote/<commentID>')
 def comment_downvote(commentID):
     # get goal comment
@@ -278,10 +297,11 @@ def comment_downvote(commentID):
         db.session.add(comment)
         Tool.commentFlag = 1
     elif commentvote is not None and comment.downvote != 0:
-        comment.downvote -=1
+        comment.downvote -= 1
         db.session.delete(commentvote)
         Tool.commentFlag = -1
     return jsonify({'downvote': comment.downvote})
+
 
 # =========================================================================================
 # check if a email is banned
@@ -293,6 +313,7 @@ def check_mail(mail):
         return jsonify('ok')
     return jsonify(author.is_banned)
 
+
 # ==================================================================================================
 # subject
 # ==================================================================================================
@@ -300,9 +321,9 @@ def check_mail(mail):
 def get_subject(subjectID):
     subject = Subject.query.filter_by(id=subjectID).first()
     url = Tool.subject_url(subject)
-    page = request.args.get('page', 1, type=int)        #Set the default page to page 1
-    articles = Article.query.filter_by(subject_id=subject.id, status=1).order_by(Article.time.desc()).paginate(page=page, per_page=20)
-
+    page = request.args.get('page', 1, type=int)  # Set the default page to page 1
+    articles = Article.query.filter_by(subject_id=subject.id, status=1).order_by(Article.time.desc()).paginate(
+        page=page, per_page=20)
 
     # ==================================================
     # hot article
@@ -316,7 +337,9 @@ def get_subject(subjectID):
     for x in a:
         hot_article.append(x)
 
-    return render_template('subject.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article, Tool=Tool)
+    return render_template('subject.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article,
+                           Tool=Tool)
+
 
 # ============================================================================================
 # before request
@@ -352,6 +375,7 @@ def before_request():
                 db.session.add(visitvote)
                 db.session.add(article)
 
+
 # ============================================================================================#
 #                                         index                                               #
 # ============================================================================================#
@@ -359,9 +383,11 @@ def before_request():
 def index():
     return render_template('io.html')
 
+
 @app.route('/test')
 def test_one():
     return render_template('test.html')
+
 
 # ============================================================================================#
 # used to out new index after new a subcategory.
@@ -392,13 +418,12 @@ def create_index():
     out.close()
     return render_template('io.html')
 
+
 # ================================================================================
 # Edit and add subject
 # ================================================================================
 @app.route('/edit_subcategory', methods=['GET', 'POST'])
 def add_sub_category():
-    if not session.get('logged_in'):
-        return render_template('login.html')
     if request.method == 'POST':
         subject_id = request.form['subject_id']
         subject_name = request.form['subject_name']
@@ -428,6 +453,8 @@ def add_sub_category():
         if request.args.get('add_father') == 'father':
             subject_id = str(None)
         return render_template('add_subcategory.html', subject_id=subject_id)
+
+
 # ============================================================================================
 # edit page
 # ============================================================================================
@@ -436,10 +463,12 @@ def post_article():
     if request.method == 'POST':
         email = request.form['email']
         # means that author isn't in database now
-        if not Author.query.filter_by(mail=email).first():
-            author = Author(mail=email, is_banned=False)
-            db.session.add(author)
-
+        if sendMailAndVerify(email):
+            if not Author.query.filter_by(mail=email).first():
+                author = Author(mail=email, is_banned=False)
+                db.session.add(author)
+        else:
+            messagebox.showinfo("提示","请输入真实有效的邮箱！")
         # pdf only
         # ----------------------------------------------------------------
         message = 'only pdf file is allowed'
@@ -467,7 +496,8 @@ def post_article():
             abstract = request.form['abstract']
             highlight = request.form['highlight']
             time = datetime.now()
-            article = Article(author_id=author_id, subject_id=subject_id, title=title, abstract=abstract, highlight=highlight, time=time, upvote=0, downvote=0, visit=0)
+            article = Article(author_id=author_id, subject_id=subject_id, title=title, abstract=abstract,
+                              highlight=highlight, time=time, upvote=0, downvote=0, visit=0)
             db.session.add(article)
             db.session.flush()
             upload_file(article)
@@ -477,6 +507,42 @@ def post_article():
         email = request.args.get('email')
         subject_id = request.args.get('subject_id')
         return render_template('post_article.html', email=email, subject_id=subject_id)
+
+
+# ——————————————————————————————————————————验证邮箱准确性—————————————————————————————————————————————————————————————
+import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
+
+
+def sendMailAndVerify(email):
+    sender = '2033528411@qq.com'
+    receivers = [email]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
+
+    # 三个参数：第一个为文本内容，第二个 plain 设置文本格式，第三个 utf-8 设置编码
+    message = MIMEText('Welcome to OAPS！Here you can share knowledges and meet a lot of friends <(￣ˇ￣)/！', 'plain',
+                       'utf-8')
+    message['From'] = Header("Lanlab", 'utf-8')  # 发送者
+    message['To'] = Header("OAPS User", 'utf-8')  # 接收者
+
+    subject = 'Welcome to OAPS！'
+    message['Subject'] = Header(subject, 'utf-8')
+
+    server = smtplib.SMTP("smtp.qq.com")
+    server.starttls()
+    server.login(sender, "mnwyigrzfzhtceag")
+    text = message.as_string()
+    result = False
+    try:
+        server.sendmail(sender, receivers, text)
+        server.quit()
+        print("邮件发送成功")
+        result = True
+    except smtplib.SMTPException:
+        print("Error: 无法发送邮件")
+
+    return result
+
 
 # =============================================================================================
 # article
@@ -492,6 +558,7 @@ def get_article(articleID):
 
     comments = article.comments
     return render_template('article.html', article=article, comments=comments, Tool=Tool)
+
 
 # ========================================================================
 # upload pdf file
@@ -513,13 +580,16 @@ def upload_file(article):
     else:
         return render_template('io.html')
 
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename)
 
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # ===========================================================================
 # download pdf file
@@ -527,12 +597,15 @@ def allowed_file(filename):
 @app.route("/download/<filename>", methods=['GET'])
 def download_file(filename):
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
+
+
 # ===========================================================================
 # preview pdf file
 # ===========================================================================
 @app.route("/preview/<filename>", methods=['GET'])
 def preview_file(filename):
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename)
+
 
 # ======================================================================
 # post comment
@@ -560,6 +633,7 @@ def post_comment(articleID):
     article.metric = Tool.calculate_metric(article)
     return redirect(url_for('get_article', articleID=articleID))
 
+
 # ===============================================================================
 # donation
 # ===============================================================================
@@ -567,23 +641,25 @@ def post_comment(articleID):
 def donaton():
     return render_template('donation.html')
 
-@app.route('/login',methods=['POST','GET'])
+
+@app.route('/login', methods=['POST', 'GET'])
 def login_verfaication():
-    #admins login verification function
-    #fetch the email and password from the html login form
+    # admins login verification function
+    # fetch the email and password from the html login form
     email = request.form['email']
     password = request.form['pass']
-    #check if it's exists in the database.
-    validate = db.session.query(Admin).filter_by(email=email,password=password).first()
+    # check if it's exists in the database.
+    validate = db.session.query(Admin).filter_by(email=email, password=password).first()
 
-    #allow access
+    # allow access
     if validate:
         session['logged_in'] = True
         return redirect('/admin')
     else:
-        #handle error
+        # handle error
         error = 'invalid username or password!'
-        return render_template('login.html',error = error)
+        return render_template('login.html', error=error)
+
 
 @app.route('/admin')
 def admin():
@@ -592,76 +668,83 @@ def admin():
     else:
         articles = Article.query.all()
         comments = Comment.query.all()
-        return render_template('admin.html',articles=articles,comments=comments)
+        return render_template('admin.html', articles=articles, comments=comments)
+
 
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
     return redirect('/')
 
+
 @app.route('/deletec/<int:id>')
 def delete_comment(id):
-    #delete the comment and its relating records from the database.
+    # delete the comment and its relating records from the database.
     comment = Comment.query.filter_by(id=id).first()
     comment_vote = CommentVote.query.filter_by(comment_id=id).first()
-    
+
     try:
-        #delete the comment
+        # delete the comment
         if comment:
             db.session.delete(comment)
             db.session.commit()
-        #delete its vote counter
+        # delete its vote counter
         if comment_vote:
             db.session.delete(comment_vote)
             db.session.commit()
         return redirect('/admin')
     except:
         return 'Error deleting comment!.'
+
+
 @app.route('/deletea/<int:id>')
 def delete_article(id):
-        #to delete an article, we have to consider deleting all its relating values
-        #from the database. so for each article first select the article, then all its related records.
-        article = Article.query.filter_by(id=id).first()
-        visit_vote = VisitVote.query.filter_by(article_id=id).first()
-        article_vote = ArticleVote.query.filter_by(article_id=id).first()
-        article_comment = Comment.query.filter_by(article_id=id).all()
+    # to delete an article, we have to consider deleting all its relating values
+    # from the database. so for each article first select the article, then all its related records.
+    article = Article.query.filter_by(id=id).first()
+    visit_vote = VisitVote.query.filter_by(article_id=id).first()
+    article_vote = ArticleVote.query.filter_by(article_id=id).first()
+    article_comment = Comment.query.filter_by(article_id=id).all()
 
-        #if the article has comments, delete them also
-        for comment in article_comment:
-            delete_comment(comment.id)
+    # if the article has comments, delete them also
+    for comment in article_comment:
+        delete_comment(comment.id)
 
-        try:
-            #delete everything related to the article.
-            if article:
-                db.session.delete(article)
-                db.session.delete(visit_vote)
-                db.session.delete(article_vote)
-                db.session.commit()
+    try:
+        # delete everything related to the article.
+        if article:
+            db.session.delete(article)
+            db.session.delete(visit_vote)
+            db.session.delete(article_vote)
+            db.session.commit()
 
-            return redirect('/admin')
-        except:
-            return 'Error deleting article!.'
+        return redirect('/admin')
+    except:
+        return 'Error deleting article!.'
+
 
 @app.route('/article_is_hidden/<int:id>')
 def article_is_hidden(id):
-        #select the article by its id number
-        article = Article.query.filter_by(id=id).first()
-        #if there is an article with the given id number...
-        if article:
-            try:
-                #if the article status is available switch it into hidden..
-                if article.status == 1:
-                    article.status = 0
-                    db.session.add(article)
-                    db.session.commit()
-                #if it's hidden switch it into available
-                elif article.status == 0:
-                    article.status = 1
-                    db.session.add(article)
-                    db.session.commit()
-                return redirect('/admin')
-            except:
-                return 'Error hiding the article!'
+    # select the article by its id number
+    article = Article.query.filter_by(id=id).first()
+    # if there is an article with the given id number...
+    if article:
+        try:
+            # if the article status is available switch it into hidden..
+            if article.status == 1:
+                article.status = 0
+                db.session.add(article)
+                db.session.commit()
+            # if it's hidden switch it into available
+            elif article.status == 0:
+                article.status = 1
+                db.session.add(article)
+                db.session.commit()
+            return redirect('/admin')
+        except:
+            return 'Error hiding the article!'
+
+
 # ===========================================================================
 # search function
 # ===========================================================================
@@ -673,17 +756,20 @@ def search():
 
     content = request.args.get('content')
 
-    a = db.session.query(Article).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
+    a = db.session.query(Article).filter(or_(Article.title.contains(content), Article.highlight.contains(content),
+                                             Article.abstract.contains(content))).all()
     c = db.session.query(Comment).filter(Comment.body.contains(content))
 
     articles = a
     comments = c
-    
+
     return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message)
+
 
 @app.route('/error/<message>')
 def error(message):
     return render_template('error.html', message=message)
+
 
 @app.route('/author/<author_id>')
 def author(author_id):
@@ -692,12 +778,6 @@ def author(author_id):
     comments = Comment.query.order_by(Comment.time.desc()).filter_by(author_id=author_id).all()
     return render_template('author.html', articles=articles, comments=comments, Tool=Tool, author=author)
 
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
-
-
-
