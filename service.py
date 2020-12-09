@@ -5,6 +5,8 @@ from flask import Flask, flash, request, redirect, url_for, session, jsonify, re
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
+from time import mktime
+import time
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = basedir + '\static\pdf'
 ALLOWED_EXTENSIONS = set(['pdf'])
@@ -187,7 +189,20 @@ class Tool:
         dislikes = article.downvote
         visits = article.visit
         comments = Comment.query.filter_by(article_id=article.id).count()
-        metric = likes * 50 - dislikes * 30 + visits * 10 + comments * 20
+        # positive feedback
+        visits_score = math.log10(visits) * 4
+        comments_score = comments / 2
+        likes_score = (likes - dislikes) / 5
+        # negative feedback
+        time = article.time
+        print(type(time))
+        # suppose the project created at projectTime
+        projectTime = '2019-11-01 12:00:00.000000'
+        timeArray = time.strptime(projectTime, '%Y-%m-%d %H:%M:%S.%f')
+        timeLag = time - timeArray
+        day = int(timeLag.total_seconds() / 3600/24)
+        time_score = day ** 1.2
+        metric = (visits_score + comments_score + likes_score)/time_score
         return metric
 
     @staticmethod
