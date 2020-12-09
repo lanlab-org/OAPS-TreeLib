@@ -315,9 +315,9 @@ def get_subject(subjectID):
     ).all()
     for x in a:
         hot_article.append(x)
-
-    return render_template('subject.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article, Tool=Tool)
-
+    if not subject.pid  == "None" :
+        return render_template('subject.html', url=url, subject_id=subject.id,lasturl="http://127.0.0.1:5000/subject/"+str(subject.pid) ,articles=articles, hot_article=hot_article, Tool=Tool)
+    else :return render_template('subject.html', url=url, subject_id=subject.id,lasturl="http://127.0.0.1:5000/" ,articles=articles, hot_article=hot_article, Tool=Tool)
 # ============================================================================================
 # before request
 # ============================================================================================
@@ -397,8 +397,6 @@ def create_index():
 # ================================================================================
 @app.route('/edit_subcategory', methods=['GET', 'POST'])
 def add_sub_category():
-    if not session.get('logged_in'):
-        return render_template('login.html')
     if request.method == 'POST':
         subject_id = request.form['subject_id']
         subject_name = request.form['subject_name']
