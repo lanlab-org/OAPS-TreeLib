@@ -111,6 +111,8 @@ class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(50), nullable=False)
+    
+db.create_all()
 # ==============================================================================================
 # Tool class include some usual methods
 # ==============================================================================================
@@ -693,7 +695,7 @@ def author(author_id):
     return render_template('author.html', articles=articles, comments=comments, Tool=Tool, author=author)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',port='8000',debug=True)
 
 
 
