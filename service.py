@@ -1,3 +1,5 @@
+
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os, uuid ,math, random
@@ -5,6 +7,8 @@ from flask import Flask, flash, request, redirect, url_for, session, jsonify, re
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
+
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = basedir + '\static\pdf'
 ALLOWED_EXTENSIONS = set(['pdf'])
@@ -152,7 +156,7 @@ class Tool:
     # ======================================================================================================
     @staticmethod
     def sensitive_words_filter(text):
-        f = open('static/sensitive words/1.txt', 'r')
+        f = open('C:/Users/lenovo/Downloads/OAPS-TreeLib-master/OAPS-TreeLib-master/static/sensitive words/1.txt', 'r')
         result = ''
         flag = True
         for line in f:
@@ -317,7 +321,7 @@ def get_subject(subjectID):
         hot_article.append(x)
 
     return render_template('subject.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article, Tool=Tool)
-
+    return render_template('io.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article, Tool=Tool)
 # ============================================================================================
 # before request
 # ============================================================================================
@@ -381,7 +385,7 @@ def create_index():
             find_subjects(subject, count + 1)
 
     subjects = Subject.query.filter_by(pid='None').all()
-    out.write('{% extends "template.html" %}' + '\n')
+    out.write( '{% extends "template.html" %}' + '\n')
     out.write('{% block content %}' + '\n')
     for subject in subjects:
         find_subjects(subject, 0)
