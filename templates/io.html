@@ -1,7 +1,20 @@
 {% extends "template.html" %}
 {% block content %}
 <body>
-
+<div>
+    <br>
+    <table class="table table-hover table-striped">
+        <tr>
+            <td>Top Articles:</td>
+        </tr>
+         {% for article in popular_articles %}
+        <tr>
+            <td><a href="/article/{{ article.id }}">Article Name: {{ article.title }}</a></td>
+        </tr>
+        {% endfor %}
+   </table>
+    <br>
+</div>
 <a href="subject/1">Physical Sciences</a><br>
 &emsp;
 <a href="subject/8">Physics</a><br>
