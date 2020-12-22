@@ -201,7 +201,7 @@ class Tool:
         timeArray = time.strptime(projectTime, '%Y-%m-%d %H:%M:%S.%f')
         timeLag = time - timeArray
         day = int(timeLag.total_seconds() / 3600/24)
-        time_score = day ** 1.2
+        time_score = day ** 0.8
         metric = (visits_score + comments_score + likes_score)/time_score
         return metric
 
