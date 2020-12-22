@@ -190,19 +190,15 @@ class Tool:
         visits = article.visit
         comments = Comment.query.filter_by(article_id=article.id).count()
         # positive feedback
-        visits_score = math.log10(visits) * 4
-        comments_score = comments / 2
-        likes_score = (likes - dislikes) / 5
+        visits_score = math.log10(visits) * 2
+        comments_score = comments * 5
+        likes_score = (likes - dislikes) * 3
         # negative feedback
-        time = article.time
-        print(type(time))
-        # suppose the project created at projectTime
-        projectTime = '2019-11-01 12:00:00.000000'
-        timeArray = time.strptime(projectTime, '%Y-%m-%d %H:%M:%S.%f')
-        timeLag = time - timeArray
-        day = int(timeLag.total_seconds() / 3600/24)
-        time_score = day ** 0.8
-        metric = (visits_score + comments_score + likes_score)/time_score
+        publish_time = article.time
+        now_time = datetime.now()
+        timeLag = int(((now_time - publish_time).total_seconds()) / 3600 / 24)
+        time_score = math.exp(- timeLag / 100)
+        metric = round((visits_score + comments_score + likes_score) * time_score,2)
         return metric
 
     @staticmethod
