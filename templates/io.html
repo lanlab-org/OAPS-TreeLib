@@ -78,19 +78,11 @@
     </div>
     <div style="background-color:aquamarine;height:1423px;width:700px;float: left;box-sizing: border-box;">
    <h1 style="background-color: rgb(0, 56, 37);color:azure;">Top5 Articles</h1>
-   &emsp;
-   <a href="article/1">Lab 3</a><br>
-   &emsp;
-   <a href="article/2">Draft 1</a><br>
    
-   &emsp;
-   <a href="article/3">my Article</a><br>
-   
-   &emsp;
-   <a href="article/5">sweet texts</a><br>
-   &emsp;
-   <a href="article/7">Astronaut </a><br>
-   &emsp;
+        {% for article in articles %}
+   &emsp;<a href="article/{{ article.id }}">{{ article.title }}</a><br>
+    {% endfor %}
+
    <h1 style="background-color: rgb(0, 56, 37);color:azure;">All Articles</h1>
    &emsp;
    <a href="article/1">Lab 3<span style="float: right;">2019-11-09 12:00:23</span></a><br>
