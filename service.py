@@ -361,7 +361,8 @@ def before_request():
 # ============================================================================================#
 @app.route('/')
 def index():
-    return render_template('io.html')
+    articles = Article.query.order_by(Article.metric.desc())[0:5]
+    return render_template('io.html', articles=articles,Tool=Tool)
 
 @app.route('/test')
 def test_one():
