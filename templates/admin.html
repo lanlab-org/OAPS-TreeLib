@@ -44,7 +44,21 @@
         </tr>
             {% endfor %}
     </table>
-    
+
+    <table id="reports" border="1" align="center" style="width: 70%; margin-top:30px;">
+            <h2 style="margin-top:30px;" align="center">reports</h2>
+            {% for report in reports %}
+        <tr>
+            <td bgcolor="#E5E4E2" align="center">
+                    <a href="/article/{{ report.article_id }}">{{ report.article_title }}</a>
+            </td>
+            <td>
+                <a href="/deleter/{{report.id}}"><button style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-primary">Delete Report</button></a>
+                <a href="/deletea/{{report.id}}"><button style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-primary">Delete Article</button></a>
+            </td>
+        </tr>
+            {% endfor %}
+    </table>
 </br>
 </br>
 </br>
