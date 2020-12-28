@@ -6,13 +6,13 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
 basedir = os.path.abspath(os.path.dirname(__file__))
-UPLOAD_FOLDER = basedir + '\static\pdf'
+UPLOAD_FOLDER = basedir + '/static/pdf'
 ALLOWED_EXTENSIONS = set(['pdf'])
 threshold = 100000
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
-app.config['UPLOAD_FOLDER'] = os.path.join(basedir+'\static\pdf')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir+'\database.sqlite')
+app.config['UPLOAD_FOLDER'] = os.path.join(basedir+'/static/pdf')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir+'/database.sqlite')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -315,9 +315,10 @@ def get_subject(subjectID):
     ).all()
     for x in a:
         hot_article.append(x)
+
     if not subject.pid  == "None" :
-        return render_template('subject.html', url=url, subject_id=subject.id,lasturl="http://127.0.0.1:5000/subject/"+str(subject.pid) ,articles=articles, hot_article=hot_article, Tool=Tool)
-    else :return render_template('subject.html', url=url, subject_id=subject.id,lasturl="http://127.0.0.1:5000/" ,articles=articles, hot_article=hot_article, Tool=Tool)
+        return render_template('subject.html', url=url, subject_id=subject.id,lasturl="/subject/"+str(subject.pid) ,articles=articles, hot_article=hot_article, Tool=Tool)
+    else :return render_template('subject.html', url=url, subject_id=subject.id,lasturl="/" ,articles=articles, hot_article=hot_article, Tool=Tool)
 # ============================================================================================
 # before request
 # ============================================================================================
@@ -359,9 +360,9 @@ def before_request():
 def index():
     return render_template('io.html')
 
-@app.route('/test')
-def test_one():
-    return render_template('test.html')
+#@app.route('/test')
+#def test_one():
+#    return render_template('test.html')
 
 # ============================================================================================#
 # used to out new index after new a subcategory.
