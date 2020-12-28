@@ -44,6 +44,20 @@
         </tr>
             {% endfor %}
     </table>
+
+    <table id="visitors" border="1" align="center" style="width: 70%; margin-top:30px;">
+            <h2 style="margin-top:30px;" align="center">Visitors</h2>
+            {% for visitor in visitors %}
+        <tr>
+            <td bgcolor="#E5E4E2" align="center">
+                    <a>{{ visitor.ip }}</a>
+            </td>
+            <td>
+                <a href="/banned/{{visitor.id}}"><button style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-primary">Banned:{{ visitor.is_banned }}</button></a>
+            </td>
+        </tr>
+            {% endfor %}
+    </table>
     
 </br>
 </br>
