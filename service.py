@@ -5,6 +5,7 @@ from flask import Flask, flash, request, redirect, url_for, session, jsonify, re
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
+from selenium import webdriver
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = basedir + '/static/pdf'
 ALLOWED_EXTENSIONS = set(['pdf'])
@@ -318,7 +319,8 @@ def get_subject(subjectID):
 
     if not subject.pid  == "None" :
         return render_template('subject.html', url=url, subject_id=subject.id,lasturl="/subject/"+str(subject.pid) ,articles=articles, hot_article=hot_article, Tool=Tool)
-    else :return render_template('subject.html', url=url, subject_id=subject.id,lasturl="/" ,articles=articles, hot_article=hot_article, Tool=Tool)
+    else :
+        return render_template('subject.html', url=url, subject_id=subject.id,lasturl="/" ,articles=articles, hot_article=hot_article, Tool=Tool)
 # ============================================================================================
 # before request
 # ============================================================================================
@@ -360,9 +362,6 @@ def before_request():
 def index():
     return render_template('io.html')
 
-#@app.route('/test')
-#def test_one():
-#    return render_template('test.html')
 
 # ============================================================================================#
 # used to out new index after new a subcategory.
