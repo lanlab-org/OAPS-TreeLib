@@ -5,7 +5,6 @@ from flask import Flask, flash, request, redirect, url_for, session, jsonify, re
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
-from selenium import webdriver
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = basedir + '/static/pdf'
 ALLOWED_EXTENSIONS = set(['pdf'])
