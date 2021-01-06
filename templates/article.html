@@ -131,7 +131,7 @@
           <textarea class="form-control" rows="3" name="body" placeholder="write something here..." required="required"></textarea>
         </div>
 
-        <button id="btn" class="btn btn-primary" type="submit" style="float:right"  onClick="prevent()">comment</button>
+        <button id="btn" class="btn btn-primary" type="submit" style="float:right">comment</button>
     </form>
     <script type="text/javascript">
         // 第一种 通过点击事件
@@ -139,7 +139,7 @@
         btn.onclick = function () {
             if (clicktag == 3) {
                 alert("请勿频繁点击！");
-                setTimeout(function () { clicktag = 0 }, 5000);
+                setTimeout(function () { clicktag = 0 }, 60000);
             } else {
                 clicktag = clicktag + 1;
             }
