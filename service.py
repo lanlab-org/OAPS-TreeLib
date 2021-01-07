@@ -156,7 +156,7 @@ class Tool:
     # ======================================================================================================
     @staticmethod
     def sensitive_words_filter(text):
-        f = open('C:/Users/lenovo/Downloads/OAPS-TreeLib-master/OAPS-TreeLib-master/static/sensitive words/1.txt', 'r')
+        f = open('static/sensitive words/1.txt', 'r')
         result = ''
         flag = True
         for line in f:
