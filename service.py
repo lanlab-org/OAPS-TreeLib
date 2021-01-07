@@ -321,7 +321,7 @@ def get_subject(subjectID):
         hot_article.append(x)
 
     return render_template('subject.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article, Tool=Tool)
-    return render_template('io.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article, Tool=Tool)
+    
 # ============================================================================================
 # before request
 # ============================================================================================
