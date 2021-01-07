@@ -361,8 +361,10 @@ def before_request():
 # ============================================================================================#
 @app.route('/')
 def index():
+    subjects = Subject.query.order_by(Subject.id.asc())
     articles = Article.query.order_by(Article.metric.desc())[0:5]
-    return render_template('io.html', articles=articles,Tool=Tool)
+    totalart = Article.query.order_by(Article.time.desc())
+    return render_template('io.html', articles=articles, subjects=subjects, totalart=totalart, Tool=Tool)
 
 @app.route('/test')
 def test_one():
