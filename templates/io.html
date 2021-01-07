@@ -2,128 +2,27 @@
 {% block content %}
 <body >
 
-    <div style="background-color:#00253a;height:auto;width:30%;float:left;box-sizing: border-box;">
-        <h1 style="background-color: lightblue;color:#00253a;">Subjects</h1>>
-        <a href="subject/1">Physical Sciences</a><br>
-        &emsp;
-        <a href="subject/8">Physics</a><br>
-        &emsp;
-        &emsp;
-        <a href="subject/11">Astronomy</a><br>
-        &emsp;
-        &emsp;
-        <a href="subject/12">Quantum Mechanics</a><br>
-        &emsp;
-        <a href="subject/9">Chemistry</a><br>
-        &emsp;
-        <a href="subject/10">Environmental Sciences</a><br>
-        <a href="subject/2">Social Sciences</a><br>
-        &emsp;
-        <a href="subject/13">Anthropology</a><br>
-        &emsp;
-        <a href="subject/14">Sustainability Science</a><br>
-        <a href="subject/3">Biological Sciences</a><br>
-        &emsp;
-        <a href="subject/15">Cell Biology</a><br>
-        &emsp;
-        &emsp;
-        <a href="subject/37">病理学</a><br>
-        &emsp;
-        <a href="subject/16">Genetics</a><br>
-        &emsp;
-        <a href="subject/17">Neuroscience</a><br>
-        &emsp;
-        <a href="subject/18">Plant Biology</a><br>
-        &emsp;
-        <a href="subject/19">Developmental Biology</a><br>
-        &emsp;
-        <a href="subject/20">System Biology</a><br>
-        &emsp;
-        <a href="subject/21">Biochemistry</a><br>
-        &emsp;
-        <a href="subject/22">Biophysics and Computational Biology</a><br>
-        <a href="subject/4">Computer Sciences</a><br>
-        &emsp;
-        <a href="subject/23">Machine Learning</a><br>
-        &emsp;
-        <a href="subject/24">Computational Biology</a><br>
-        &emsp;
-        <a href="subject/25">Computational Complexity</a><br>
-        &emsp;
-        <a href="subject/26">Computational Linguistics</a><br>
-        <a href="subject/5">Statistics</a><br>
-        &emsp;
-        <a href="subject/27">Applied Statistics</a><br>
-        &emsp;
-        <a href="subject/28">Mathematical Statistics</a><br>
-        <a href="subject/6">Mathematics</a><br>
-        &emsp;
-        <a href="subject/29">Graphy Theory</a><br>
-        &emsp;
-        <a href="subject/30">Number Theory</a><br>
-        <a href="subject/7">Medical Sciences</a><br>
-        &emsp;
-        <a href="subject/31">Breast Cancer</a><br>
-        &emsp;
-        <a href="subject/32">Ebola Virus</a><br>
-        &emsp;
-        <a href="subject/33">Epidemics</a><br>
-        &emsp;
-        <a href="subject/34">Dermatology General</a><br>
-        &emsp;
-        <a href="subject/35">Immunity</a><br>
-        &emsp;
-        <a href="subject/36">Obesity</a><br>
-
+    <div style="background-color:white;height:auto;width:30%;float:left;box-sizing: border-box;">
+        <h1 style="background-color: black;color:#FFFFFF;">Subjects</h1>
+        {% for subject in subjects %}
+        <a href="subject/{{subject.id}}" style="color:black">{{subject.name}}</a><br>        
+        {%endfor%}
     </div>
-    <div style="background-color:aquamarine;height:1423px;width:700px;float: left;box-sizing: border-box;">
-   <h1 style="background-color: rgb(0, 56, 37);color:azure;">Top5 Articles</h1>
-   
-        {% for article in articles %}
-   &emsp;<a href="article/{{ article.id }}">{{ article.title }}</a><br>
+    <div style="background-color:white;height:1423px;width:700px;float: left;box-sizing: border-box;">
+   <h1 style="background-color: black;color:white;">Top5 Articles</h1>
+  
+   {% for article in articles %}
+   &emsp;<a href="article/{{ article.id }}" style="color:black">{{ article.title }}</a><br>
     {% endfor %}
 
-   <h1 style="background-color: rgb(0, 56, 37);color:azure;">All Articles</h1>
+
+
    &emsp;
-   <a href="article/1">Lab 3<span style="float: right;">2019-11-09 12:00:23</span></a><br>
+   <h1 style="background-color:black;color:white;">All Articles</h1>
+   {% for article in totalart %}
    &emsp;
-   <a href="article/2">Draft 1<span style="float: right;">2019-11-09 13:01:09</span></a><br>
-   
-   &emsp;
-   <a href="article/3">my Article<span style="float: right;">2020-03-18 06:41:50</span></a><br>
-   
-   &emsp;
-   <a href="article/5">sweet texts<span style="float: right;">2020-03-19 05:57:19</span></a><br>
-   &emsp;
-   <a href="article/7">Astronaut<span style="float: right;">2020-03-19 07:28:16</span> </a><br>
-   &emsp;
-   <a href="article/8">Spaceships<span style="float: right;">2020-03-19 07:29:33</span></a><br>
-   &emsp;
-   <a href="article/9">Venus<span style="float: right;">2020-03-19 07:30:34</span></a><br>
-   
-   &emsp;
-   <a href="article/10">The Article<span style="float: right;">2020-04-19 20:30:33</span></a><br>
-   
-   &emsp;
-   <a href="article/11">Physical science article<span style="float: right;">2020-04-19 20:32:36</span></a><br>
-   &emsp;
-   <a href="article/12">The Article<span style="float: right;">2020-04-19 20:34:42</span></a><br>
-   &emsp;
-   <a href="article/13">My Favourite<span style="float: right;">2020-04-19 20:37:13</span></a><br>
-   &emsp;
-   <a href="article/14">The Legendary<span style="float: right;">2020-04-19 20:38:44</span></a><br>
-   
-   &emsp;
-   <a href="article/15">More<span style="float: right;">2020-04-19 20:40:18</span></a><br>
-   
-   &emsp;
-   <a href="article/16">New Article<span style="float: right;">2020-04-19 20:42:57</span></a><br>
-   &emsp;
-   <a href="article/17">Fundamentals of Physical Sciences<span style="float: right;">2020-04-19 20:45:24</span></a><br>
-   &emsp;
-   <a href="article/18">Physical sciences in Action<span style="float: right;">2020-04-19 20:46:25</span></a><br>
-   &emsp;
-   <a href="article/19">Physical Sciences Cook book<span style="float: right;">2020-04-19 20:48:27</span> </a><br>
+   <a href="article/{{article.id}}" style="color:black">{{article.title}}<span style="float: right;" style="color:black">{{article.time}}</span></a><br>
+  {%endfor%}
     </div>
 
 </body>
