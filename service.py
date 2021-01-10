@@ -359,9 +359,9 @@ def before_request():
 def index():
     return render_template('io.html')
 
-@app.route('/test')
-def test_one():
-    return render_template('test.html')
+#@app.route('/test')
+#def test_one():
+#    return render_template('test.html')
 
 # ============================================================================================#
 # used to out new index after new a subcategory.
