@@ -7,13 +7,13 @@ from datetime import datetime, timedelta
 from flask import Flask
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-UPLOAD_FOLDER = basedir + '\static\pdf'
+UPLOAD_FOLDER = basedir + '/static/pdf'
 ALLOWED_EXTENSIONS = set(['pdf'])
 threshold = 100000
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
-app.config['UPLOAD_FOLDER'] = os.path.join(basedir + '\static\pdf')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir + '\database.sqlite')
+app.config['UPLOAD_FOLDER'] = os.path.join(basedir+'/static/pdf')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir+'/database.sqlite')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -56,6 +56,8 @@ class Article(db.Model):
     metric = db.Column(db.Float, default=0)
     fpath = db.Column(db.String)
     status = db.Column(db.Integer, default=1)
+    # Add downloads
+    downloadcount = db.Column(db.Integer)
     # OneToMany
     comments = db.relationship('Comment', backref='article', cascade='all,delete-orphan')
 
@@ -335,9 +337,11 @@ def get_subject(subjectID):
     for x in a:
         hot_article.append(x)
 
-    return render_template('subject.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article,
-                           Tool=Tool)
 
+    if not subject.pid  == "None" :
+        return render_template('subject.html', url=url, subject_id=subject.id,lasturl="/subject/"+str(subject.pid) ,articles=articles, hot_article=hot_article, Tool=Tool)
+    else :
+        return render_template('subject.html', url=url, subject_id=subject.id,lasturl="/" ,articles=articles, hot_article=hot_article, Tool=Tool)
 
 # ============================================================================================
 # before request
@@ -381,10 +385,6 @@ def before_request():
 def index():
     return render_template('io.html')
 
-
-@app.route('/test')
-def test_one():
-    return render_template('test.html')
 
 
 # ============================================================================================#
@@ -555,8 +555,11 @@ def allowed_file(filename):
 # ===========================================================================
 # download pdf file
 # ===========================================================================
-@app.route("/download/<filename>", methods=['GET'])
-def download_file(filename):
+@app.route("/download/<filename>/<id>", methods=['GET'])
+def download_file(filename, id):
+    article = Article.query.get(id)
+    article.downloadcount += 1
+    db.session.add(article)
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
 
 
@@ -723,8 +726,10 @@ def search():
 
     articles = a
     comments = c
-
-    return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message)
+    content1 = content.upper()
+    content2 = content.lower()
+    content3 = content.capitalize()
+    return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message,kwd=content,kwd1=content1,kwd2=content2,kwd3=content3)
 
 
 @app.route('/error/<message>')

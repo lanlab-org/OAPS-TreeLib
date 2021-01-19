@@ -87,25 +87,29 @@
 
     <h2 class="card-title">{{ article.title }}</h2><!--title-->
 
-    <p class="card-text bp" >-abstract<br></p><p>&nbsp;{{ Tool.sensitive_words_filter(article.abstract) }}</p><br><br><!--abstract-->
+    <p class="card-text bp">Abstract<br></p><p>&nbsp;{{ Tool.sensitive_words_filter(article.abstract) }}</p><br><br><!--abstract-->
 
-    <p class="card-text bp">-hightlights<br></p><p>&nbsp;{{ article.highlight }}</p><br><br><!--highlights-->
+    <p class="card-text bp">Hightlights<br></p><p>&nbsp;{{ article.highlight }}</p><br><br><!--highlights-->
 
-    <p class="card-text bp">-population metric<br></p><p>&nbsp;{{ article.metric }}</p><br><br><!-- population metric-->
+    <p class="card-text bp">Popularity Metric<br></p><p>&nbsp;{{ article.metric }}</p><br><br><!-- popularity metric-->
 
-    <p class="card-text bp">-publication date<br></p><p>&nbsp;{{ article.time.strftime("%Y-%m-%d %H:%M") }}</p><br><br><!--publication date-->
+    <p class="card-text bp">Publication Date<br></p><p>&nbsp;{{ article.time.strftime("%Y-%m-%d %H:%M") }}</p><br><br><!--publication date-->
 
-    <p class="card-text bp">-author<br></p>&nbsp;<a href="{{ url_for('author', author_id=article.author_id) }}">{{ Tool.email_display_filter(article.author.mail) }}</a><br><br><!--author-->
+    <p class="card-text bp">Author Information<br></p>&nbsp;<a href="{{ url_for('author', author_id=article.author_id) }}">{{ Tool.email_display_filter(article.author.mail) }}</a><br><br><!--author-->
 
     <br><br>
 
     <div>
         <p class="text-primary pp" onclick="like()">like</p>  <p id="like">{{ article.upvote }}</p>&nbsp;
 
-        <p class="text-primary pp" onclick="dislike()">dislike</p> <p id="dislike">{{ article.downvote }}</p>&nbsp;<br>
+        <p class="text-primary pp" onclick="dislike()">dislike</p> <p id="dislike">{{ article.downvote }}</p>&nbsp;
+
+        <!--New downloads-->
+        <div style="float:right"><p class="text-primary">download number </p> <p id="download_number">{{ article.downloadcount }}</p></div><br>
 
 
-        <a href="{{ url_for('download_file', filename=article.fpath) }}"><button class="btn btn-primary" style="float:right" >download pdf</button></a><!--pdf download link-->
+
+        <a href="{{ url_for('download_file', filename=article.fpath, id=article.id) }}"><button class="btn btn-primary" style="float:right" >download pdf</button></a><!--pdf download link-->
 
         <a href="{{ url_for('preview_file', filename=article.fpath) }}"><button class="btn btn-primary" style="float:left" >preview</button></a>
     
