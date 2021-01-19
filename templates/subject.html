@@ -107,62 +107,56 @@ Click again, and the sorting direction will be descending (Z to A):-->
 {% endfor %}
 
 <script>
+/*
+This funcion is used to sort the articles by popularity or title.
+When it is sorted by title ,it should be sorted in dictionary order.
+Else when it is sorted by popularity,it should be sorted in comparing with its value.
+*/
+var dir = "asc"//Now point the button,it should sort in ascending order,and sort in descending order when point again.
 function sortTable(n) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  //alert("sweet texts".localeCompare("physical sciences cook book"));
+  var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
   table = document.getElementById("myTable");
-  switching = true;
-  //Set the sorting direction to ascending:
-  dir = "asc";
-  /*Make a loop that will continue until
-  no switching has been done:*/
-  while (switching) {
-    //start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
-    for (i = 1; i < (rows.length - 1); i++) {
-      //start by saying there should be no switching:
-      shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      /*check if the two rows should switch place,
-      based on the direction, asc or desc:*/
-      if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch= true;
-          break;
+  rows = table.rows;
+  /*Bubble sort：*/
+  for(i = 1;i < (rows.length - 1);i++){//Enumerate each one to set from the front to the back
+    for(j = (rows.length - 1);j >= i+1;j--){//Exchange the largest or smallest to the front
+        shouldSwitch = false;//Record whether it will be switched
+        x = rows[j].getElementsByTagName("TD")[n];
+        y = rows[j - 1].getElementsByTagName("TD")[n];
+        if(n==3){//if n!=3 that means we should sort by popularity,so we should compare by its value.
+            if (dir == "asc") {
+                if (parseFloat(x.innerText) > parseFloat(y.innerText)) {
+                  shouldSwitch = true;
+                }
+            } else if (dir == "desc") {
+                if (parseFloat(x.innerText) < parseFloat(y.innerText)) {
+                  shouldSwitch = true;
+                }
+            }
+        }else {//if n=3 that means we should sort by title,so we should compare in dictionary order.
+            if (dir == "asc") {
+                if (x.innerText.toLowerCase().localeCompare(y.innerText.toLowerCase()) == 1) {
+                  shouldSwitch = true;
+                }
+            } else if (dir == "desc") {
+                if (x.innerText.toLowerCase().localeCompare(y.innerText.toLowerCase()) == -1) {
+                  shouldSwitch = true;
+                }
+            }
         }
-      } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch = true;
-          break;
+        if (shouldSwitch) {// if should switch,then switch the neighbours.
+          rows[j].parentNode.insertBefore(rows[j], rows[j - 1]);
+          shouldSwitch = false;
         }
-      }
-    }
-    if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      //Each time a switch is done, increase this count by 1:
-      switchcount ++;
-    } else {
-      /*If no switching has been done AND the direction is "asc",
-      set the direction to "desc" and run the while loop again.*/
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
-        switching = true;
-      }
     }
   }
+  if(dir == "desc"){//if it's sort in ascending order now,then we'll change it to descending order.
+    dir="asc";
+  }else{
+    dir="desc";
+  }
 }
-
-
 </script>
 
 
