@@ -23,7 +23,10 @@
         <tr>
             <td><a href="/subject/{{ article.subject_id }}">{{ article.subject.name }}</a></td>
             <td><a href="/article/{{ article.id }}">{{ article.title.replace(kwd, '<span style=\"background-color:yellow\">'+kwd+'</span>').replace(kwd1, '<span style=\"background-color:yellow\">'+kwd1+'</span>').replace(kwd2, '<span style=\"background-color:yellow\">'+kwd2+'</span>').replace(kwd3, '<span style=\"background-color:yellow\">'+kwd3+'</span>') | safe }}</a></td>
+	    <td>-</td>
+	    <td>-</td>
             <td>{{ Tool.email_display_filter(article.author.mail) }}</td>
+	    <td>-</td>
             <td>{{ article.metric }}</td>
         </tr>
         {% endfor %}
