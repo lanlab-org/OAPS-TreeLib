@@ -21,7 +21,8 @@
     <tbody>
         {% for article in articles %}
         <tr>
-            <td><a href="/subject/{{ article.subject_id }}">{{ article.subject.name }}</a></td>
+          <td><a href="/subject/{{ article.subject_id }}">{{ article.subject.name }}</a></td>
+	  <!-- the following line contains problematic code, because the subsequent replace may replace the g in background-color -->
             <td><a href="/article/{{ article.id }}">{{ article.title.replace(kwd, '<span style=\"background-color:yellow\">'+kwd+'</span>').replace(kwd1, '<span style=\"background-color:yellow\">'+kwd1+'</span>').replace(kwd2, '<span style=\"background-color:yellow\">'+kwd2+'</span>').replace(kwd3, '<span style=\"background-color:yellow\">'+kwd3+'</span>') | safe }}</a></td>
 	    <td>-</td>
 	    <td>-</td>
