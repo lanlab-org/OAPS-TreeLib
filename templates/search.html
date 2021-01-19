@@ -13,13 +13,13 @@
         <th>title</th>
         <th>author</th>
         <th>time</th>
-          <th>population</th>
+          <th>popularity</th>
       </tr>
     </thead>
     <tbody>
         {% for article in articles %}
             <td><a href="/subject/{{ article.subject_id }}">{{ article.subject.name }}</a></td>
-            <td><a href="/article/{{ article.id }}">{{ article.title }}</a></td>
+            <td><a href="/article/{{ article.id }}">{{ article.title.replace(kwd, '<span style=\"background-color:yellow\">'+kwd+'</span>').replace(kwd1, '<span style=\"background-color:yellow\">'+kwd1+'</span>').replace(kwd2, '<span style=\"background-color:yellow\">'+kwd2+'</span>').replace(kwd3, '<span style=\"background-color:yellow\">'+kwd3+'</span>') | safe }}</a></td>
             <td>{{ Tool.email_display_filter(article.author.mail) }}</td>
             <td>{{ article.time.strftime("%Y-%m-%d %H:%M") }}</td>
             <td>{{ article.metric }}</td>
@@ -44,7 +44,7 @@
     <tbody>
         {% for comment in comments %}
         <tr>
-            <td><a href="/article/{{ comment.article_id }}">{{ comment.article.title }}</a></td>
+            <td><a href="/article/{{ comment.article_id }}">{{ comment.article.title.replace(kwd, '<span style=\"background-color:yellow\">'+kwd+'</span>').replace(kwd1, '<span style=\"background-color:yellow\">'+kwd1+'</span>').replace(kwd2, '<span style=\"background-color:yellow\">'+kwd2+'</span>').replace(kwd3, '<span style=\"background-color:yellow\">'+kwd3+'</span>') | safe }}</a></td>
             <td>{{ Tool.sensitive_words_filter(comment.body) }}</td>
             <td>{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</td>
             <td><a href="/author/{{ comment.author_id }}">{{ Tool.email_display_filter(comment.author.mail) }}</a></td>
