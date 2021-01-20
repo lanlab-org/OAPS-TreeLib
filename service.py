@@ -730,13 +730,11 @@ def search():
 
     content = request.args.get('content')
 
-    a = db.session.query(Article).order_by(Article.metric.desc()).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
+    matched_articles = db.session.query(Article).order_by(Article.metric.desc()).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
     
-    c = db.session.query(Comment).filter(Comment.body.contains(content))
+    matched_comments = db.session.query(Comment).filter(Comment.body.contains(content))
 
-    articles = a
-    comments = c
-    return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message,kwd=content)
+    return render_template('search.html', articles=matched_articles, comments=matched_comments, Tool=Tool, message=message,kwd=content)
 
 
 @app.route('/error/<message>')
