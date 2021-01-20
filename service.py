@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os, uuid, math, random
+import re
 from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
@@ -214,6 +215,15 @@ class Tool:
             display += '*'
 
         return display + suf
+
+    @staticmethod
+    def highlight_matched_parts(sentence, search_key_word):
+        pattern = re.compile(re.escape(search_key_word), re.IGNORECASE)
+        if pattern:
+            return pattern.sub('<span style="background-color:yellow">%s</span>' % (search_key_word), sentence)
+        else:
+            return sentence
+        
 
 
 # =========================================================================================
@@ -720,8 +730,8 @@ def search():
 
     content = request.args.get('content')
 
-    a = db.session.query(Article).order_by(Article.metric.desc()).filter(or_(Article.title.contains(content), Article.highlight.contains(content),
-                                             Article.abstract.contains(content))).all()
+    a = db.session.query(Article).order_by(Article.metric.desc()).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
+    
     c = db.session.query(Comment).filter(Comment.body.contains(content))
 
     articles = a
