@@ -139,7 +139,7 @@
 
 
 
-                <a href="{{ url_for('download_file', filename=article.fpath) }}">
+                <a href="{{ url_for('download_file', id=article.id, filename=article.fpath) }}">
                     <button class="btn btn-primary" style="float:right">download pdf</button>
                 </a><!--pdf download link-->
 
