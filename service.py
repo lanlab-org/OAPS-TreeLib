@@ -223,8 +223,6 @@ class Tool:
             return pattern.sub('<span style="background-color:yellow">%s</span>' % (search_key_word), sentence)
         else:
             return sentence
-        
-
 
 # =========================================================================================
 # like and dislike
@@ -396,7 +394,6 @@ def index():
     return render_template('io.html')
 
 
-
 # ============================================================================================#
 # used to out new index after new a subcategory.
 # ============================================================================================#
@@ -527,8 +524,13 @@ def get_article(articleID):
         article.visit += 1
         db.session.add(article)
 
+    comments_tup = []
     comments = article.comments
-    return render_template('article.html', article=article, comments=comments, Tool=Tool)
+    for n,i in enumerate(comments):
+        comments_tup.append((n,i))
+
+    return render_template('article.html', article=article, comments=comments_tup, Tool=Tool)
+
 
 
 # ========================================================================
@@ -731,7 +733,6 @@ def search():
     content = request.args.get('content')
 
     matched_articles = db.session.query(Article).order_by(Article.metric.desc()).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
-    
     matched_comments = db.session.query(Comment).filter(Comment.body.contains(content))
 
     return render_template('search.html', articles=matched_articles, comments=matched_comments, Tool=Tool, message=message,kwd=content)
