@@ -1,20 +1,19 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os, uuid, math, random
-import re
 from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-UPLOAD_FOLDER = basedir + '/static/pdf'
+UPLOAD_FOLDER = basedir + '\static\pdf'
 ALLOWED_EXTENSIONS = set(['pdf'])
 threshold = 100000
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
-app.config['UPLOAD_FOLDER'] = os.path.join(basedir+'/static/pdf')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir+'/database.sqlite')
+app.config['UPLOAD_FOLDER'] = os.path.join(basedir + '\static\pdf')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir + '\database.sqlite')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -57,8 +56,6 @@ class Article(db.Model):
     metric = db.Column(db.Float, default=0)
     fpath = db.Column(db.String)
     status = db.Column(db.Integer, default=1)
-    # Add downloads
-    downloadcount = db.Column(db.Integer)
     # OneToMany
     comments = db.relationship('Comment', backref='article', cascade='all,delete-orphan')
 
@@ -168,7 +165,7 @@ class Tool:
     # ======================================================================================================
     @staticmethod
     def sensitive_words_filter(text):
-        f = open(basedir + '/static/sensitive words/1.txt', 'r')
+        f = open('static/sensitive words/1.txt', 'r')
         result = ''
         flag = True
         for line in f:
@@ -215,15 +212,6 @@ class Tool:
             display += '*'
 
         return display + suf
-
-    @staticmethod
-    def highlight_matched_parts(sentence, search_key_word):
-        pattern = re.compile(re.escape(search_key_word), re.IGNORECASE)
-        if pattern:
-            return pattern.sub('<span style="background-color:yellow">%s</span>' % (search_key_word), sentence)
-        else:
-            return sentence
-        
 
 
 # =========================================================================================
@@ -347,11 +335,9 @@ def get_subject(subjectID):
     for x in a:
         hot_article.append(x)
 
+    return render_template('subject.html', url=url, subject_id=subject.id, articles=articles, hot_article=hot_article,
+                           Tool=Tool)
 
-    if not subject.pid  == "None" :
-        return render_template('subject.html', url=url, subject_id=subject.id,lasturl="/subject/"+str(subject.pid) ,articles=articles, hot_article=hot_article, Tool=Tool)
-    else :
-        return render_template('subject.html', url=url, subject_id=subject.id,lasturl="/" ,articles=articles, hot_article=hot_article, Tool=Tool)
 
 # ============================================================================================
 # before request
@@ -395,6 +381,10 @@ def before_request():
 def index():
     return render_template('io.html')
 
+
+@app.route('/test')
+def test_one():
+    return render_template('test.html')
 
 
 # ============================================================================================#
@@ -527,8 +517,12 @@ def get_article(articleID):
         article.visit += 1
         db.session.add(article)
 
+    comments_tup = []
     comments = article.comments
-    return render_template('article.html', article=article, comments=comments, Tool=Tool)
+    for n,i in enumerate(comments):
+        comments_tup.append((n,i))
+
+    return render_template('article.html', article=article, comments=comments_tup, Tool=Tool)
 
 
 # ========================================================================
@@ -565,11 +559,8 @@ def allowed_file(filename):
 # ===========================================================================
 # download pdf file
 # ===========================================================================
-@app.route("/download/<filename>/<id>", methods=['GET'])
-def download_file(filename, id):
-    article = Article.query.get(id)
-    article.downloadcount += 1
-    db.session.add(article)
+@app.route("/download/<filename>", methods=['GET'])
+def download_file(filename):
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
 
 
@@ -730,11 +721,14 @@ def search():
 
     content = request.args.get('content')
 
-    matched_articles = db.session.query(Article).order_by(Article.metric.desc()).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
-    
-    matched_comments = db.session.query(Comment).filter(Comment.body.contains(content))
+    a = db.session.query(Article).filter(or_(Article.title.contains(content), Article.highlight.contains(content),
+                                             Article.abstract.contains(content))).all()
+    c = db.session.query(Comment).filter(Comment.body.contains(content))
 
-    return render_template('search.html', articles=matched_articles, comments=matched_comments, Tool=Tool, message=message,kwd=content)
+    articles = a
+    comments = c
+
+    return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message)
 
 
 @app.route('/error/<message>')
@@ -752,3 +746,4 @@ def author(author_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
