@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os, uuid, math, random
+import re
 from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
@@ -214,6 +215,15 @@ class Tool:
             display += '*'
 
         return display + suf
+
+    @staticmethod
+    def highlight_matched_parts(sentence, search_key_word):
+        pattern = re.compile(re.escape(search_key_word), re.IGNORECASE)
+        if pattern:
+            return pattern.sub('<span style="background-color:yellow">%s</span>' % (search_key_word), sentence)
+        else:
+            return sentence
+        
 
 
 # =========================================================================================
@@ -720,16 +730,11 @@ def search():
 
     content = request.args.get('content')
 
-    a = db.session.query(Article).order_by(Article.metric.desc()).filter(or_(Article.title.contains(content), Article.highlight.contains(content),
-                                             Article.abstract.contains(content))).all()
-    c = db.session.query(Comment).filter(Comment.body.contains(content))
+    matched_articles = db.session.query(Article).order_by(Article.metric.desc()).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
+    
+    matched_comments = db.session.query(Comment).filter(Comment.body.contains(content))
 
-    articles = a
-    comments = c
-    content1 = content.upper()
-    content2 = content.lower()
-    content3 = content.capitalize()
-    return render_template('search.html', articles=articles, comments=comments, Tool=Tool, message=message,kwd=content,kwd1=content1,kwd2=content2,kwd3=content3)
+    return render_template('search.html', articles=matched_articles, comments=matched_comments, Tool=Tool, message=message,kwd=content)
 
 
 @app.route('/error/<message>')

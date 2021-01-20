@@ -22,12 +22,11 @@
         {% for article in articles %}
         <tr>
           <td><a href="/subject/{{ article.subject_id }}">{{ article.subject.name }}</a></td>
-	  <!-- the following line contains problematic code, because the subsequent replace may replace the g in background-color -->
-            <td><a href="/article/{{ article.id }}">{{ article.title.replace(kwd, '<span style=\"background-color:yellow\">'+kwd+'</span>').replace(kwd1, '<span style=\"background-color:yellow\">'+kwd1+'</span>').replace(kwd2, '<span style=\"background-color:yellow\">'+kwd2+'</span>').replace(kwd3, '<span style=\"background-color:yellow\">'+kwd3+'</span>') | safe }}</a></td>
-	    <td>-</td>
-	    <td>-</td>
-            <td>{{ Tool.email_display_filter(article.author.mail) }}</td>
-	    <td>-</td>
+            <td><a href="/article/{{ article.id }}">{{ Tool.highlight_matched_parts(article.title, kwd) | safe }}</a></td>
+	    <td>{{ Tool.highlight_matched_parts(article.abstract, kwd) | safe }}</td>
+	    <td>{{ Tool.highlight_matched_parts(article.highlight, kwd) | safe }}</td>
+            <td>{{ Tool.email_display_filter(article.author.mail) | safe }}</td>
+	    <td>{{ article.time.strftime('%Y-%m-%d %H:%M') | safe }}</td>
             <td>{{ article.metric }}</td>
         </tr>
         {% endfor %}
@@ -50,8 +49,8 @@
     <tbody>
         {% for comment in comments %}
         <tr>
-            <td><a href="/article/{{ comment.article_id }}">{{ comment.article.title.replace(kwd, '<span style=\"background-color:yellow\">'+kwd+'</span>').replace(kwd1, '<span style=\"background-color:yellow\">'+kwd1+'</span>').replace(kwd2, '<span style=\"background-color:yellow\">'+kwd2+'</span>').replace(kwd3, '<span style=\"background-color:yellow\">'+kwd3+'</span>') | safe }}</a></td>
-            <td>{{ Tool.sensitive_words_filter(comment.body) }}</td>
+            <td><a href="/article/{{ comment.article_id }}">{{ Tool.highlight_matched_parts(comment.article.title, kwd) | safe }}</a></td>
+            <td>{{ Tool.highlight_matched_parts(Tool.sensitive_words_filter(comment.body), kwd) | safe }}</td>
             <td>{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</td>
             <td><a href="/author/{{ comment.author_id }}">{{ Tool.email_display_filter(comment.author.mail) }}</a></td>
         </tr>
