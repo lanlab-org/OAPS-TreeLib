@@ -26,7 +26,7 @@
 	    <td>{{ Tool.highlight_matched_parts(article.abstract, kwd) | safe }}</td>
 	    <td>{{ Tool.highlight_matched_parts(article.highlight, kwd) | safe }}</td>
             <td>{{ Tool.email_display_filter(article.author.mail) | safe }}</td>
-	    <td>{{ Tool.highlight_matched_parts(article.time.strftime('%Y-%m-%d %H:%M'), kwd) | safe }}</td>
+	    <td>{{ article.time.strftime('%Y-%m-%d %H:%M') | safe }}</td>
             <td>{{ article.metric }}</td>
         </tr>
         {% endfor %}
