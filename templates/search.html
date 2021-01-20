@@ -49,8 +49,8 @@
     <tbody>
         {% for comment in comments %}
         <tr>
-            <td><a href="/article/{{ comment.article_id }}">{{ comment.article.title.replace(kwd, '<span style=\"background-color:yellow\">'+kwd+'</span>').replace(kwd1, '<span style=\"background-color:yellow\">'+kwd1+'</span>').replace(kwd2, '<span style=\"background-color:yellow\">'+kwd2+'</span>').replace(kwd3, '<span style=\"background-color:yellow\">'+kwd3+'</span>') | safe }}</a></td>
-            <td>{{ Tool.sensitive_words_filter(comment.body) }}</td>
+            <td><a href="/article/{{ comment.article_id }}">{{ Tool.highlight_matched_parts(comment.article.title, kwd) | safe }}</a></td>
+            <td>{{ Tool.highlight_matched_parts(Tool.sensitive_words_filter(comment.body), kwd) | safe }}</td>
             <td>{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</td>
             <td><a href="/author/{{ comment.author_id }}">{{ Tool.email_display_filter(comment.author.mail) }}</a></td>
         </tr>
