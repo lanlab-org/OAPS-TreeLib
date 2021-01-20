@@ -1,4 +1,4 @@
-From flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import os, uuid, math, random
 import re
