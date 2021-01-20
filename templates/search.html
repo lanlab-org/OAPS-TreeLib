@@ -22,7 +22,6 @@
         {% for article in articles %}
         <tr>
           <td><a href="/subject/{{ article.subject_id }}">{{ article.subject.name }}</a></td>
-	  <!-- the following line contains problematic code, because the subsequent replace may replace the g in background-color -->
             <td><a href="/article/{{ article.id }}">{{ Tool.highlight_matched_parts(article.title, kwd) | safe }}</a></td>
 	    <td>-</td>
 	    <td>-</td>
