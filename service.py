@@ -203,7 +203,17 @@ class Tool:
         dislikes = article.downvote
         visits = article.visit
         comments = Comment.query.filter_by(article_id=article.id).count()
-        metric = likes * 50 - dislikes * 30 + visits * 10 + comments * 20
+        # positive feedback
+        visits_score = math.log2(visits)
+        comments_score = comments * 3
+        likes_score = likes * 2
+        dislikes_score =  dislikes * 1  # dislike information is also important
+        # negative feedback
+        publish_time = article.time
+        now_time = datetime.now()
+        timeLag = int(((now_time - publish_time).total_seconds()) / 3600 / 24)
+        time_score = math.exp(- timeLag / 100)
+        metric = round((visits_score + comments_score + likes_score + dislikes_score) * time_score,2)
         return metric
 
     @staticmethod
