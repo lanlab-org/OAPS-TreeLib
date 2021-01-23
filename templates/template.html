@@ -19,7 +19,7 @@
         <!-- ajax -->
         <script src="http://how2j.cn/study/axios.min.js"></script>
 
-	<script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.1.0/js/all.js"></script>
     <style>
 
         footer{
@@ -34,7 +34,17 @@ hr.light{
   margin-bottom: 1rem;
 }
     </style>
-
+<script type="text/javascript">
+    $(function (){
+        $("#search_btn").click(function (){
+            if ($("#search_text").val() == '') {
+                alert("you haven't entered anything");
+            } else {
+                $("#searchInput").submit();
+            }
+        });
+    });
+</script>
 
     {% block head %}
 
@@ -54,10 +64,11 @@ hr.light{
         </li>
           <!-- search -->&emsp;
           <li class="nav-item" style="float:right">
-              <form method="get" action="/search">
-              <input type="text" name="content" style="border-radius:2px;" placeholder="input keyword to search"/>&nbsp;
-              <button class="btn btn-secondary" type="submit">search</button>
+              <form id="searchInput" method="get" action="/search" style="float: left">
+              <input type="text" name="content" id="search_text" style="border-radius:2px;" placeholder="input keyword to search"/>&nbsp;
               </form>
+              <button class="btn btn-secondary" style="margin-left: 5px;" id="search_btn">search</button>
+
           </li>
       </ul>
     </nav>
