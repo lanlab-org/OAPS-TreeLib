@@ -102,6 +102,7 @@
         }
 
     </script>
+
 {% endblock %}
 
 
@@ -150,15 +151,13 @@
             </div>
 
 
-        </div>
-    </div>
-
 
     <br>
     <!--comment edit-->
     <div class="card">
         <div class="card-body">
             <form method="post" action="{{ url_for('post_comment', articleID=article.id) }}" onsubmit="">
+
 
                 <div class="form-group">
                     <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email"
@@ -172,6 +171,21 @@
 
                 <button class="btn btn-primary" type="submit" style="float:right">comment</button>
             </form>
+
+    <script type="text/javascript">
+        // 第一种 通过点击事件
+        var clicktag = 1;
+        btn.onclick = function () {
+            if (clicktag == 3) {
+                alert("请勿频繁点击！");
+                setTimeout(function () { clicktag = 0 }, 60000);
+            } else {
+                clicktag = clicktag + 1;
+            }
+        }
+
+    </script>
+	    
         </div>
     </div><br>
 
