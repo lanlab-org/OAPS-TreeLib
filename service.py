@@ -397,9 +397,7 @@ def before_request():
                 visitvote = VisitVote(visitor_id=visitor.id, article_id=article_id)
                 db.session.add(visitvote)
                 db.session.add(article)
-@app.route('/testip')
-def testip():
-    return session.get('ip')
+
 
 # ============================================================================================#
 #                                         index                                               #
