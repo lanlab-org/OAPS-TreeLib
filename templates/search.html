@@ -5,7 +5,7 @@
         {{ message }}
     {% endif %}
 
-    {% if articles%}
+    {% if articles %}
         <table class="table table-hover table-striped">
     <thead>
       <tr>
@@ -36,18 +36,20 @@
     {% endif %}
 
 
-    {% if comments%}
+    {% if comments %}
+        {% if comments[0] %}
         <table class="table table-hover table-striped">
-    <thead>
-      <tr>
-          <th>article_title</th>
-        <th>comment</th>
-        <th>time</th>
-        <th>author</th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for comment in comments %}
+            <thead>
+              <tr>
+                  <th>article_title</th>
+                <th>comment</th>
+                <th>time</th>
+                <th>author</th>
+              </tr>
+            </thead>
+        {% endif %}
+        <tbody>
+        {%for comment in comments%}
         <tr>
             <td><a href="/article/{{ comment.article_id }}">{{ Tool.highlight_matched_parts(comment.article.title, kwd) | safe }}</a></td>
             <td>{{ Tool.highlight_matched_parts(Tool.sensitive_words_filter(comment.body), kwd) | safe }}</td>
@@ -55,8 +57,18 @@
             <td><a href="/author/{{ comment.author_id }}">{{ Tool.email_display_filter(comment.author.mail) }}</a></td>
         </tr>
         {% endfor %}
+<!--        {% for comment in comments %}-->
+<!--        <tr>-->
+<!--            <td><a href="/article/{{ comment.article_id }}">{{ Tool.highlight_matched_parts(comment.article.title, kwd) | safe }}</a></td>-->
+<!--            <td>{{ Tool.highlight_matched_parts(Tool.sensitive_words_filter(comment.body), kwd) | safe }}</td>-->
+<!--            <td>{{ comment.time.strftime("%Y-%m-%d %H:%M") }}</td>-->
+<!--            <td><a href="/author/{{ comment.author_id }}">{{ Tool.email_display_filter(comment.author.mail) }}</a></td>-->
+<!--        </tr>-->
+<!--        {% endfor %}-->
     </tbody>
   </table>
+
+
     {% endif %}
 
 {% endblock %}
