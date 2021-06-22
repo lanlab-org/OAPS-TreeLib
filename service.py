@@ -397,8 +397,6 @@ def create_index():
 # ================================================================================
 @app.route('/edit_subcategory', methods=['GET', 'POST'])
 def add_sub_category():
-    if not session.get('logged_in'):
-        return render_template('login.html')
     if request.method == 'POST':
         subject_id = request.form['subject_id']
         subject_name = request.form['subject_name']
@@ -694,8 +692,6 @@ def author(author_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
 
 
 
