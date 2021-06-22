@@ -366,8 +366,11 @@ def get_subject(subjectID):
 # ============================================================================================
 @app.before_request
 def before_request():
-    ip = IP
-    session['ip'] = ip
+    if request.headers.getlist("X-Forwarded-For"):
+        ip = request.headers.getlist("X-Forwarded-For")[0]
+    else:
+        ip = request.remote_addr
+    session['ip']=ip
     visitor = Visitor.query.filter_by(ip=ip).first()
     if visitor is None:
         visitor = Visitor(ip=ip)
@@ -762,4 +765,4 @@ def author(author_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host="0.0.0.0")

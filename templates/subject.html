@@ -86,7 +86,7 @@ Click again, and the sorting direction will be descending (Z to A):-->
     {% for article in articles.items %}
         <tr>
             <td><a href="/article/{{ article.id }}">{{ article.title }}</a></td>
-        <td>{{ Tool.email_display_filter(article.author.mail) }}</td>
+            <td><a href="{{ url_for('author', author_id=article.author_id) }}">{{ Tool.email_display_filter(article.author.mail) }}</a></td>
         <td>{{ article.time.strftime("%Y-%m-%d %H:%M") }}</td>
         <td>{{ article.metric }}</td>
       </tr>

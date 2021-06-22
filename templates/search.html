@@ -25,7 +25,7 @@
             <td><a href="/article/{{ article.id }}">{{ Tool.highlight_matched_parts(article.title, kwd) | safe }}</a></td>
 	    <td>{{ Tool.highlight_matched_parts(article.abstract, kwd) | safe }}</td>
 	    <td>{{ Tool.highlight_matched_parts(article.highlight, kwd) | safe }}</td>
-            <td>{{ Tool.email_display_filter(article.author.mail) | safe }}</td>
+            <td><a href="{{ url_for('author', author_id=article.author_id) }}">{{ Tool.email_display_filter(article.author.mail) | safe }}</a></td>
 	    <td>{{ article.time.strftime('%Y-%m-%d %H:%M') | safe }}</td>
             <td>{{ article.metric }}</td>
         </tr>

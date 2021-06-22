@@ -132,7 +132,7 @@
 
                 <p class="text-primary pp" onclick="dislike()">dislike</p>
                 <p id="dislike">{{ article.downvote }}</p>&nbsp;<br>
-        <p class="text-primary pp" onclick="dislike()">dislike</p> <p id="dislike">{{ article.downvote }}</p>&nbsp;
+<!--        <p class="text-primary pp" onclick="dislike()">dislike</p> <p id="dislike">{{ article.downvote }}</p>&nbsp;-->
 
         <!--New downloads-->
         <div style="float:right"><p class="text-primary">download number </p> <p id="download_number">{{ article.downloadcount }}</p></div><br>
@@ -193,8 +193,8 @@
             </div>
         {% endfor %}
     </div>
-
+    {% if comments %}
     <button class="btn btn-primary" type="submit" style="float:right" onclick="sort()">排序/取消排序</button>
-
+    {% endif %}
 
 {% endblock %}
