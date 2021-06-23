@@ -13,7 +13,7 @@ pipeline {
                 echo 'Building..'
 		sh 'sudo docker build -t OAPS-TreeLib .'
 		sh 'sudo docker stop $(docker ps -aq)'
-		sh 'sudo docker run -d -p 91:80 -v /var/lib/jenkins/workspace/EnglishPal_Pipeline_master/frequency:/frequency -t OAPS-TreeLib'
+		sh 'sudo docker run -d -p 91:80 -v /var/lib/jenkins/workspace/SPM-Spring2021-2599-徐坚苗201831990136_master/frequency:/frequency -t OAPS-TreeLib'
             }
         }
         stage('TestIt') {
