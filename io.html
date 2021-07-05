@@ -1,0 +1,89 @@
+{% extends "template.html" %}
+{% block content %}
+<body>
+<div>
+    <br>
+    <table class="table table-hover table-striped">
+        <tr>
+            <td>Top Articles:</td>
+        </tr>
+         {% for article in popular_articles %}
+        <tr>
+            <td><a href="/article/{{ article.id }}">Article Name: {{ article.title }}</a></td>
+        </tr>
+        {% endfor %}
+   </table>
+    <br>
+</div>
+<a href="subject/1">Physical Sciences</a><br>
+&emsp;
+<a href="subject/8">Physics</a><br>
+&emsp;
+&emsp;
+<a href="subject/11">Astronomy</a><br>
+&emsp;
+&emsp;
+<a href="subject/12">Quantum Mechanics</a><br>
+&emsp;
+<a href="subject/9">Chemistry</a><br>
+&emsp;
+<a href="subject/10">Environmental Sciences</a><br>
+<a href="subject/2">Social Sciences</a><br>
+&emsp;
+<a href="subject/13">Anthropology</a><br>
+&emsp;
+<a href="subject/14">Sustainability Science</a><br>
+<a href="subject/3">Biological Sciences</a><br>
+&emsp;
+<a href="subject/15">Cell Biology</a><br>
+&emsp;
+&emsp;
+<a href="subject/37">病理学</a><br>
+&emsp;
+<a href="subject/16">Genetics</a><br>
+&emsp;
+<a href="subject/17">Neuroscience</a><br>
+&emsp;
+<a href="subject/18">Plant Biology</a><br>
+&emsp;
+<a href="subject/19">Developmental Biology</a><br>
+&emsp;
+<a href="subject/20">System Biology</a><br>
+&emsp;
+<a href="subject/21">Biochemistry</a><br>
+&emsp;
+<a href="subject/22">Biophysics and Computational Biology</a><br>
+<a href="subject/4">Computer Sciences</a><br>
+&emsp;
+<a href="subject/23">Machine Learning</a><br>
+&emsp;
+<a href="subject/24">Computational Biology</a><br>
+&emsp;
+<a href="subject/25">Computational Complexity</a><br>
+&emsp;
+<a href="subject/26">Computational Linguistics</a><br>
+<a href="subject/5">Statistics</a><br>
+&emsp;
+<a href="subject/27">Applied Statistics</a><br>
+&emsp;
+<a href="subject/28">Mathematical Statistics</a><br>
+<a href="subject/6">Mathematics</a><br>
+&emsp;
+<a href="subject/29">Graphy Theory</a><br>
+&emsp;
+<a href="subject/30">Number Theory</a><br>
+<a href="subject/7">Medical Sciences</a><br>
+&emsp;
+<a href="subject/31">Breast Cancer</a><br>
+&emsp;
+<a href="subject/32">Ebola Virus</a><br>
+&emsp;
+<a href="subject/33">Epidemics</a><br>
+&emsp;
+<a href="subject/34">Dermatology General</a><br>
+&emsp;
+<a href="subject/35">Immunity</a><br>
+&emsp;
+<a href="subject/36">Obesity</a><br>
+</body>
+{%  endblock  %}
