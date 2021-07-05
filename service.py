@@ -6,125 +6,15 @@ from flask import Flask, flash, request, redirect, url_for, session, jsonify, re
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Flask
-
-basedir = os.path.abspath(os.path.dirname(__file__))
+import model
+import connect
+basedir=connect.basedir
 UPLOAD_FOLDER = basedir + '/static/pdf'
 ALLOWED_EXTENSIONS = set(['pdf'])
 threshold = 100000
-app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
-app.config['UPLOAD_FOLDER'] = os.path.join(basedir+'/static/pdf')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir+'/database.sqlite')
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
-db = SQLAlchemy(app)
-IP = '168.0.0.10'
-
-
-class Author(db.Model):
-    __tablename__ = 'authors'
-    id = db.Column(db.Integer, primary_key=True)
-    mail = db.Column(db.String(50), unique=True)
-    is_banned = db.Column(db.Boolean, default=False)
-    # OneToMany
-    articles = db.relationship('Article', backref='author')
-    comments = db.relationship('Comment', backref='author')
-
-
-class Subject(db.Model):
-    __tablename__ = 'subjects'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
-    pid = db.Column(db.Integer)
-    # OneToMany
-    articles = db.relationship('Article', backref='subject')
-
-
-class Article(db.Model):
-    __tablename__ = 'articles'
-    id = db.Column(db.Integer, primary_key=True)
-    author_id = db.Column(db.Integer, db.ForeignKey('authors.id'))
-    subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))
-    title = db.Column(db.Text)
-    abstract = db.Column(db.Text)
-    highlight = db.Column(db.Text)
-    time = db.Column(db.DateTime)
-    visit = db.Column(db.Integer)
-    upvote = db.Column(db.Integer)
-    downvote = db.Column(db.Integer)
-    metric = db.Column(db.Float, default=0)
-    fpath = db.Column(db.String)
-    status = db.Column(db.Integer, default=1)
-    # Add downloads
-    downloadcount = db.Column(db.Integer)
-    # OneToMany
-    comments = db.relationship('Comment', backref='article', cascade='all,delete-orphan')
-
-
-class Comment(db.Model):
-    __tablename__ = 'comments'
-    id = db.Column(db.Integer, primary_key=True)
-    author_id = db.Column(db.Integer, db.ForeignKey('authors.id'))
-    article_id = db.Column(db.Integer, db.ForeignKey('articles.id'))
-    body = db.Column(db.Text)
-    upvote = db.Column(db.Integer)
-    downvote = db.Column(db.Integer)
-    time = db.Column(db.DateTime)
-
-
-# ------------------------------------------------------#
-#              record every visitor's ip               #
-# ------------------------------------------------------#
-class Visitor(db.Model):
-    __tablename__ = 'visitors'
-    id = db.Column(db.Integer, primary_key=True)
-    ip = db.Column(db.String(50), unique=True)
-    is_banned = db.Column(db.Boolean, default=False)
-    # OneToMangy
-    article_votes = db.relationship('ArticleVote', backref='visitor')
-    comment_votes = db.relationship('CommentVote', backref='visitor')
-    visit_votes = db.relationship('VisitVote', backref='visitor')
-
-
-class ArticleVote(db.Model):
-    __tablename__ = 'article_votes'
-    id = db.Column(db.Integer, primary_key=True)
-    visitor_id = db.Column(db.Integer, db.ForeignKey('visitors.id'))
-    article_id = db.Column(db.Integer)
-
-
-class CommentVote(db.Model):
-    __tablename__ = 'comment_votes'
-    id = db.Column(db.Integer, primary_key=True)
-    visitor_id = db.Column(db.Integer, db.ForeignKey('visitors.id'))
-    comment_id = db.Column(db.Integer)
-
-
-class VisitVote(db.Model):
-    _tablename__ = 'visit_votes'
-    id = db.Column(db.Integer, primary_key=True)
-    visitor_id = db.Column(db.Integer, db.ForeignKey('visitors.id'))
-    article_id = db.Column(db.Integer)
-
-
-class SensitiveWord(db.Model):
-    __tablename__ = 'sensitive_words'
-    id = db.Column(db.Integer, primary_key=True)
-    word = db.Column(db.String(50))
-
-
-class Admin(db.Model):
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
-
-    __tablename__ = 'admins'
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(50), nullable=False)
-
+db=connect.db
+app=connect.app
+IP=connect.IP
 
 # ==============================================================================================
 # Tool class include some usual methods
@@ -138,7 +28,7 @@ class Tool:
         if (subject.pid == 'None'):
             print(subject.id)
         else:
-            subject = Subject.query.filter_by(id=subject.pid).first()
+            subject = model.model.Subject.query.filter_by(id=subject.pid).first()
             Tool.find(subject)
 
     # ==================================================================================================
@@ -150,7 +40,7 @@ class Tool:
         url = ''
         while subject.pid != 'None':
             url = subject.name + '/' + url
-            subject = Subject.query.filter_by(id=subject.pid).first()
+            subject = model.Subject.query.filter_by(id=subject.pid).first()
         url = subject.name + '/' + url
         return url[0:-1]
 
@@ -202,7 +92,7 @@ class Tool:
         likes = article.upvote
         dislikes = article.downvote
         visits = article.visit
-        comments = Comment.query.filter_by(article_id=article.id).count()
+        comments = model.model.Comment.query.filter_by(article_id=article.id).count()
         # positive feedback
         visits_score = math.log2(visits)
         comments_score = comments * 3
@@ -240,14 +130,14 @@ class Tool:
 @app.route('/article_upvote/<articleID>')
 def article_upvote(articleID):
     # get goal article
-    article = Article.query.filter_by(id=articleID).first()
+    article = model.Article.query.filter_by(id=articleID).first()
     ip = session.get('ip')
-    visitor = Visitor.query.filter_by(ip=ip).first()
-    articlevote = ArticleVote.query.filter_by(visitor_id=visitor.id, article_id=articleID).first()
+    visitor = model.Visitor.query.filter_by(ip=ip).first()
+    articlevote = model.ArticleVote.query.filter_by(visitor_id=visitor.id, article_id=articleID).first()
 
     # didn't vote this article before
     if articlevote is None and Tool.articleFlag != 1:
-        articlevote = ArticleVote(visitor_id=visitor.id, article_id=articleID)
+        articlevote = model.ArticleVote(visitor_id=visitor.id, article_id=articleID)
         article.upvote += 1
         article.metric = Tool.calculate_metric(article)
         db.session.add(articlevote)
@@ -261,13 +151,13 @@ def article_upvote(articleID):
 @app.route('/article_downvote/<articleID>')
 def article_downvote(articleID):
     # get goal article
-    article = Article.query.filter_by(id=articleID).first()
+    article = model.Article.query.filter_by(id=articleID).first()
     ip = session.get('ip')
-    visitor = Visitor.query.filter_by(ip=ip).first()
-    articlevote = ArticleVote.query.filter_by(visitor_id=visitor.id, article_id=articleID).first()
+    visitor = model.Visitor.query.filter_by(ip=ip).first()
+    articlevote = model.ArticleVote.query.filter_by(visitor_id=visitor.id, article_id=articleID).first()
     # didn't vote this article before
     if articlevote is None:
-        articlevote = ArticleVote(visitor_id=visitor.id, article_id=articleID)
+        articlevote = model.ArticleVote(visitor_id=visitor.id, article_id=articleID)
         article.downvote += 1
         article.metric = Tool.calculate_metric(article)
         db.session.add(articlevote)
@@ -283,13 +173,13 @@ def article_downvote(articleID):
 @app.route('/comment_upvote/<commentID>')
 def comment_upvote(commentID):
     # get goal comment
-    comment = Comment.query.filter_by(id=commentID).first()
+    comment = model.Comment.query.filter_by(id=commentID).first()
     ip = session.get('ip')
-    visitor = Visitor.query.filter_by(ip=ip).first()
-    commentvote = CommentVote.query.filter_by(visitor_id=visitor.id, comment_id=commentID).first()
+    visitor = model.Visitor.query.filter_by(ip=ip).first()
+    commentvote = model.CommentVote.query.filter_by(visitor_id=visitor.id, comment_id=commentID).first()
     # didn't vote this article before
     if commentvote is None and Tool.commentFlag != 1:
-        commentvote = CommentVote(visitor_id=visitor.id, comment_id=commentID)
+        commentvote = model.CommentVote(visitor_id=visitor.id, comment_id=commentID)
         comment.upvote += 1
         db.session.add(commentvote)
         db.session.add(comment)
@@ -302,14 +192,14 @@ def comment_upvote(commentID):
 @app.route('/comment_downvote/<commentID>')
 def comment_downvote(commentID):
     # get goal comment
-    comment = Comment.query.filter_by(id=commentID).first()
+    comment = model.Comment.query.filter_by(id=commentID).first()
     ip = session.get('ip')
-    visitor = Visitor.query.filter_by(ip=ip).first()
+    visitor = model.Visitor.query.filter_by(ip=ip).first()
 
-    commentvote = CommentVote.query.filter_by(visitor_id=visitor.id, comment_id=commentID).first()
+    commentvote = model.CommentVote.query.filter_by(visitor_id=visitor.id, comment_id=commentID).first()
     # didn't vote this article before
     if commentvote is None:
-        commentvote = CommentVote(visitor_id=visitor.id, comment_id=commentID)
+        commentvote = model.CommentVote(visitor_id=visitor.id, comment_id=commentID)
         comment.downvote += 1
         db.session.add(commentvote)
         db.session.add(comment)
@@ -326,7 +216,7 @@ def comment_downvote(commentID):
 # ========================================================================================
 @app.route('/check/<mail>')
 def check_mail(mail):
-    author = Author.query.filter_by(mail=mail).first()
+    author = model.Author.query.filter_by(mail=mail).first()
     if not author:
         return jsonify('ok')
     return jsonify(author.is_banned)
@@ -337,10 +227,10 @@ def check_mail(mail):
 # ==================================================================================================
 @app.route('/subject/<subjectID>')
 def get_subject(subjectID):
-    subject = Subject.query.filter_by(id=subjectID).first()
+    subject = model.Subject.query.filter_by(id=subjectID).first()
     url = Tool.subject_url(subject)
     page = request.args.get('page', 1, type=int)  # Set the default page to page 1
-    articles = Article.query.filter_by(subject_id=subject.id, status=1).order_by(Article.time.desc()).paginate(
+    articles = model.Article.query.filter_by(subject_id=subject.id, status=1).order_by(model.Article.time.desc()).paginate(
         page=page, per_page=20)
 
     # ==================================================
@@ -348,9 +238,9 @@ def get_subject(subjectID):
     # ==================================================
     hot_article = []
     total = 0
-    a = db.session.query(Article).filter(
-        Article.subject_id == subject.id,
-        Article.metric > threshold
+    a = db.session.query(model.Article).filter(
+        model.Article.subject_id == subject.id,
+        model.Article.metric > threshold
     ).all()
     for x in a:
         hot_article.append(x)
@@ -368,13 +258,13 @@ def get_subject(subjectID):
 def before_request():
     ip = IP
     session['ip'] = ip
-    visitor = Visitor.query.filter_by(ip=ip).first()
+    visitor = model.Visitor.query.filter_by(ip=ip).first()
     if visitor is None:
-        visitor = Visitor(ip=ip)
+        visitor = model.Visitor(ip=ip)
         db.session.add(visitor)
     else:
         # banned ip, can not visit
-        if Visitor.query.filter_by(ip=ip).first().is_banned:
+        if model.Visitor.query.filter_by(ip=ip).first().is_banned:
             print('you have beenn banned')
             return render_template('error.html', message='you have beenn banned')
 
@@ -384,14 +274,14 @@ def before_request():
         # about visit of a article
         if request.path.startswith('/article'):
             article_id = Tool.find_path_last_id(request.path)
-            visitor = Visitor.query.filter_by(ip=ip).first()
-            visitvote = VisitVote.query.filter_by(visitor_id=visitor.id, article_id=article_id).first()
+            visitor = model.Visitor.query.filter_by(ip=ip).first()
+            visitvote = model.VisitVote.query.filter_by(visitor_id=visitor.id, article_id=article_id).first()
             # first visit to this article
             if visitvote is None:
-                article = Article.query.filter_by(id=article_id).first()
+                article = model.Article.query.filter_by(id=article_id).first()
                 article.visit += 1
                 article.metric = Tool.calculate_metric(article)
-                visitvote = VisitVote(visitor_id=visitor.id, article_id=article_id)
+                visitvote = model.VisitVote(visitor_id=visitor.id, article_id=article_id)
                 db.session.add(visitvote)
                 db.session.add(article)
 
@@ -418,10 +308,10 @@ def create_index():
             for i in range(count):
                 out.write('&emsp;\n')
             out.write('<a href="subject/' + str(subject.id) + '">' + subject.name + '</a><br>\n')
-        for subject in Subject.query.filter_by(pid=subject.id).all():
+        for subject in model.Subject.query.filter_by(pid=subject.id).all():
             find_subjects(subject, count + 1)
 
-    subjects = Subject.query.filter_by(pid='None').all()
+    subjects = model.Subject.query.filter_by(pid='None').all()
     out.write('{% extends "template.html" %}' + '\n')
     out.write('{% block content %}' + '\n')
     for subject in subjects:
@@ -443,7 +333,7 @@ def add_sub_category():
         subject_id = request.form['subject_id']
         subject_name = request.form['subject_name']
 
-        duplicate1 = Subject.query.filter_by(name=subject_name).first()
+        duplicate1 = model.Subject.query.filter_by(name=subject_name).first()
         duplicate2 = 'pivot'
 
         f = open('static/possible subject/subjects.txt', 'r')
@@ -456,9 +346,9 @@ def add_sub_category():
             info = 'duplicate subject name!'
             return render_template('add_subcategory.html', info=info, subject_id=subject_id)
         else:
-            subject = Subject(name=subject_name, pid=subject_id)
+            subject = model.Subject(name=subject_name, pid=subject_id)
             if subject_id is None:
-                subject = Subject(name=subject_name)
+                subject = model.Subject(name=subject_name)
             db.session.add(subject)
             db.session.flush()
             create_index()
@@ -478,8 +368,8 @@ def post_article():
     if request.method == 'POST':
         email = request.form['email']
         # means that author isn't in database now
-        if not Author.query.filter_by(mail=email).first():
-            author = Author(mail=email, is_banned=False)
+        if not model.Author.query.filter_by(mail=email).first():
+            author = model.Author(mail=email, is_banned=False)
             db.session.add(author)
 
         # pdf only
@@ -503,13 +393,13 @@ def post_article():
             message = 'You can\'t post articles repeatedlly!'
             return render_template('error.html', message=message)
         else:
-            author_id = Author.query.filter_by(mail=email).first().id
+            author_id = model.Author.query.filter_by(mail=email).first().id
             subject_id = request.form['subject_id']
             title = request.form['title']
             abstract = request.form['abstract']
             highlight = request.form['highlight']
             time = datetime.now()
-            article = Article(author_id=author_id, subject_id=subject_id, title=title, abstract=abstract,
+            article = model.Article(author_id=author_id, subject_id=subject_id, title=title, abstract=abstract,
                               highlight=highlight, time=time, upvote=0, downvote=0, visit=0)
             db.session.add(article)
             db.session.flush()
@@ -527,10 +417,10 @@ def post_article():
 # =============================================================================================
 @app.route('/article/<articleID>')
 def get_article(articleID):
-    article = Article.query.filter_by(id=articleID).first()
+    article = model.Article.query.filter_by(id=articleID).first()
     ip = session.get('ip')
 
-    if not Visitor.query.filter_by(ip=ip).first():
+    if not model.Visitor.query.filter_by(ip=ip).first():
         article.visit += 1
         db.session.add(article)
 
@@ -579,7 +469,7 @@ def allowed_file(filename):
 # ===========================================================================
 @app.route("/download/<filename>/<id>", methods=['GET'])
 def download_file(filename, id):
-    article = Article.query.get(id)
+    article = model.Article.query.get(id)
     article.downloadcount += 1
     db.session.add(article)
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER']), filename, as_attachment=True)
@@ -608,14 +498,14 @@ def post_comment(articleID):
     body = request.form['body']
     time = datetime.now()
     # author is not in the database
-    if not Author.query.filter_by(mail=email).first():
-        author = Author(mail=email, is_banned=False)
+    if not model.Author.query.filter_by(mail=email).first():
+        author = model.Author(mail=email, is_banned=False)
         db.session.add(author)
 
-    author_id = Author.query.filter_by(mail=email).first().id
-    comment = Comment(author_id=author_id, article_id=articleID, body=body, upvote=0, downvote=0, time=time)
+    author_id = model.Author.query.filter_by(mail=email).first().id
+    comment = model.Comment(author_id=author_id, article_id=articleID, body=body, upvote=0, downvote=0, time=time)
     db.session.add(comment)
-    article = Article.query.filter_by(id=articleID).first()
+    article = model.Article.query.filter_by(id=articleID).first()
     article.metric = Tool.calculate_metric(article)
     return redirect(url_for('get_article', articleID=articleID))
 
@@ -635,7 +525,7 @@ def login_verfaication():
     email = request.form['email']
     password = request.form['pass']
     # check if it's exists in the database.
-    validate = db.session.query(Admin).filter_by(email=email, password=password).first()
+    validate = db.session.query(model.Admin).filter_by(email=email, password=password).first()
 
     # allow access
     if validate:
@@ -652,8 +542,8 @@ def admin():
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
-        articles = Article.query.all()
-        comments = Comment.query.all()
+        articles = model.Article.query.all()
+        comments = model.Comment.query.all()
         return render_template('admin.html', articles=articles, comments=comments)
 
 
@@ -666,8 +556,8 @@ def logout():
 @app.route('/deletec/<int:id>')
 def delete_comment(id):
     # delete the comment and its relating records from the database.
-    comment = Comment.query.filter_by(id=id).first()
-    comment_vote = CommentVote.query.filter_by(comment_id=id).first()
+    comment = model.Comment.query.filter_by(id=id).first()
+    comment_vote = model.CommentVote.query.filter_by(comment_id=id).first()
 
     try:
         # delete the comment
@@ -687,10 +577,10 @@ def delete_comment(id):
 def delete_article(id):
     # to delete an article, we have to consider deleting all its relating values
     # from the database. so for each article first select the article, then all its related records.
-    article = Article.query.filter_by(id=id).first()
-    visit_vote = VisitVote.query.filter_by(article_id=id).first()
-    article_vote = ArticleVote.query.filter_by(article_id=id).first()
-    article_comment = Comment.query.filter_by(article_id=id).all()
+    article = model.Article.query.filter_by(id=id).first()
+    visit_vote = model.VisitVote.query.filter_by(article_id=id).first()
+    article_vote = model.ArticleVote.query.filter_by(article_id=id).first()
+    article_comment = model.Comment.query.filter_by(article_id=id).all()
 
     # if the article has comments, delete them also
     for comment in article_comment:
@@ -712,7 +602,7 @@ def delete_article(id):
 @app.route('/article_is_hidden/<int:id>')
 def article_is_hidden(id):
     # select the article by its id number
-    article = Article.query.filter_by(id=id).first()
+    article = model.Article.query.filter_by(id=id).first()
     # if there is an article with the given id number...
     if article:
         try:
@@ -742,8 +632,8 @@ def search():
 
     content = request.args.get('content')
 
-    matched_articles = db.session.query(Article).order_by(Article.metric.desc()).filter(or_(Article.title.contains(content), Article.highlight.contains(content), Article.abstract.contains(content))).all()
-    matched_comments = db.session.query(Comment).filter(Comment.body.contains(content))
+    matched_articles = db.session.query(model.Article).order_by(model.Article.metric.desc()).filter(or_(model.Article.title.contains(content), model.Article.highlight.contains(content), model.Article.abstract.contains(content))).all()
+    matched_comments = db.session.query(model.Comment).filter(model.Comment.body.contains(content))
 
     return render_template('search.html', articles=matched_articles, comments=matched_comments, Tool=Tool, message=message,kwd=content)
 
@@ -755,9 +645,9 @@ def error(message):
 
 @app.route('/author/<author_id>')
 def author(author_id):
-    author = Author.query.filter_by(id=author_id).first()
-    articles = Article.query.order_by(Article.time.desc()).filter_by(author_id=author_id).all()
-    comments = Comment.query.order_by(Comment.time.desc()).filter_by(author_id=author_id).all()
+    author = model.Author.query.filter_by(id=author_id).first()
+    articles = model.Article.query.order_by(model.Article.time.desc()).filter_by(author_id=author_id).all()
+    comments = model.Comment.query.order_by(model.Comment.time.desc()).filter_by(author_id=author_id).all()
     return render_template('author.html', articles=articles, comments=comments, Tool=Tool, author=author)
 
 
