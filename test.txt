@@ -1,0 +1,265 @@
+@T001
+
+Test title: test case for requirement 1
+
+Test for: RQ01
+
+Description: recently uploaded articles feature .
+
+Rationale: Confirm that the articles are listed by time .
+
+Input: click 
+
+Expected output: Articles listed by time
+
+Actual output: As expected
+
+Diagnosis: None.
+
+Status: P
+
+Signature: sabuj
+
+Date: 2020-05-26
+
+
+@T002
+
+Test title: test case for requirement 2
+
+Test for: RQ02
+
+Description: Testing if a user enter a lewd  article , the system should ban the user  email ..
+
+Rationale: Confirm that a user is banned after uploading undesirable article 
+
+Input: lewd articles 
+
+Expected output: user is banned
+
+Actual output: As expected
+
+Diagnosis: None.
+
+Status: P
+
+Signature: sabuj
+
+Date: 2020-05-27
+
+@T003
+
+Test title: test case for requirement 3
+
+Test for: RQ03
+
+Description: Testing search by article's abstract.
+
+Rationale: Confirm that a user can search by abstract.
+
+Input: This lab is a follow-up to Lab 2
+
+Expected output: Article titled Learn Python Two
+
+Actual output: As expected
+
+Diagnosis: None.
+
+Status: P
+
+Signature: sabuj
+
+Date: 2020-05-27
+
+@T004
+
+Test title: test case for requirement 4
+
+Test for: RQ04
+
+Description: Testing search by article's time.
+
+Rationale: Confirm that a user can search by time.
+
+Input: 10/05/2019
+
+Expected output: Article titled 
+
+Actual output: None.
+
+Diagnosis: The system can't find results by article's time.
+
+Status: F
+
+Signature: sabuj
+
+Date: 2020-05-28
+
+@T005
+
+Test title: test case for requirement 5
+
+Test for: RQ05
+
+Description: Testing whether a user can like a comment.
+
+Rationale: Confirm that a user can like comments.
+
+Input: Click Like button.
+
+Expected output: Like count increases.
+
+Actual output: As expected
+
+Diagnosis: None.
+
+Status: P
+
+Signature: sabuj
+
+Date: 2020-05-28
+
+@T006
+
+Test title: test case for requirement 6
+
+Test for: RQ06
+
+Description: Testing if a user upload a heavy file the system should be able to show an alert message .
+
+Rationale: A user may upload a heavy useless file .
+
+Input: upload heavy file.
+
+Expected output: Alert message notifying the user to not upload file exceeding 600 mb.
+
+Actual output: As expected
+
+Diagnosis: None.
+
+Status: P
+
+Signature: sabuj
+
+Date: 2020-05-29
+
+@T007
+
+Test title: test case for requirement 7
+
+Test for: RQ07
+
+Description: Testing uploading files of PDF format.
+
+Rationale: Users are allowed to upload PDF files only.
+
+Input: Upload PDF file.
+
+Expected output: File is uploaded successfuly.
+
+Actual output: As expected
+
+Diagnosis: None.
+
+Status: P
+
+Signature: sabuj
+
+Date: 2020-05-29
+
+@T008
+
+Test title: test case for requirement 8
+
+Test for: RQ08
+
+Description: Testing uploading files of non PDF format.
+
+Rationale: Users are not allowed to upload non PDF files.
+
+Input: Upload DOC file.
+
+Expected output: Alert message
+
+Actual output: As expected
+
+Diagnosis: None.
+
+Status: P
+
+Signature: sabuj
+
+Date: 2020-05-29
+
+@T009
+
+Test title: test case for requirement 9
+
+Test for: RQ09
+
+Description: Testing User should be able to search for an article by its author
+.
+
+Rationale: Users should be able to search an article by its author.
+
+Input: search.
+
+Expected output: list of articles
+
+Actual output: As expected
+
+Diagnosis: None.
+
+Status: P
+
+Signature: sabuj
+
+Date: 2020-05-29
+
+@T0010
+
+Test title: test case for requirement 10
+
+Test for: RQ010
+
+Description: Testing If a user enter an incorrect email , the system should alert the user to try a valid email..
+
+Rationale: Users are not allowed to enter invalid email.
+
+Input: invalid email.
+
+Expected output: Alert message
+
+Actual output: As expected
+
+Diagnosis: None.
+
+Status: P
+
+Signature: sabuj
+
+Date: 2020-05-29
+
+@T0011
+
+Test title: test case for requirement 8
+
+Test for: RQ011
+
+Description: Testing Users should be able to search for an article by its title..
+
+Rationale: Users are not allowed to upload non PDF files.
+
+Input: Upload DOC file.
+
+Expected output: Alert message
+
+Actual output: As expected
+
+Diagnosis: None.
+
+Status: P
+
+Signature: sabuj
+
+Date: 2020-05-29
