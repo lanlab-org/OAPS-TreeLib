@@ -1,0 +1,18 @@
+{% extends "template.html" %}
+{% block content %}
+    {% if articles%}
+        <table class="table table-hover table-striped">
+          <tr>
+            <th>subject</th>
+            <th>title</th>
+            <th>time</th>
+          </tr>
+            {% for article in articles %}
+                <td><a href="/subject/{{ article.subject_id }}">{{ article.subject.name }}</a></td>
+                <td><a href="/article/{{ article.id }}">{{ article.title }}</a></td>
+                <td>{{ article.time.strftime("%Y-%m-%d %H:%M") }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

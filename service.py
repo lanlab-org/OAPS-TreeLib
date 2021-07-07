@@ -761,5 +761,10 @@ def author(author_id):
     return render_template('author.html', articles=articles, comments=comments, Tool=Tool, author=author)
 
 
+@app.route('/recent')
+def sort_articles():
+    articles = Article.query.order_by(Article.time.desc()).all()
+    return render_template("recentlyuploaded.html", articles=articles)
+
 if __name__ == '__main__':
     app.run(debug=True)
